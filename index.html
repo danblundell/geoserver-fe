@@ -5,23 +5,38 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body>
+    <div id="map-wrapper"></div>
+    <!-- layer filter -->
     <form id="filter">
       <label>Filter</label>
       <input type="text" id="filter-text" />
     </form>
     <a href="#" id="clear-filter">Clear Filter</a>
+    <!-- /layer filter -->
+
     <ul id="layers-control"></ul>
+    
+
+
+    <!-- templates -->
     <script id="layerTemplate" type="text/template">
           <label for="<%= name %>">
           <input type="checkbox" name="<%= name %>" class="layer-toggle" />
           <%= title %>
           </label>
     </script>
+    <script id="mapTemplate" type="text/template">
+          <div id="map"></div>
+    </script>
+    <!-- /templates -->
+    <script src="http://openlayers.org/dev/OpenLayers.js"></script>
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     <script src="js/lib/underscore-min.js"></script>
     <script src="js/lib/backbone-min.js"></script>
     <script src="js/models/Layer.js"></script>
+    <script src="js/models/Map.js"></script>
     <script src="js/collections/LayerCollection.js"></script>
+    <script src="js/views/MapView.js"></script>
     <script src="js/views/LayerView.js"></script>
     <script src="js/views/LayerCollectionView.js"></script>
     <script src="js/views/LayerCollectionController.js"></script>
