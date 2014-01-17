@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping Cart with Backbone</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+    <form id="filter">
+      <label>Filter</label>
+      <input type="text" id="filter-text" />
+    </form>
+    <a href="#" id="clear-filter">Clear Filter</a>
+    <ul id="layers-control"></ul>
+    <script id="layerTemplate" type="text/template">
+          <label for="<%= name %>">
+          <input type="checkbox" name="<%= name %>" class="layer-toggle" />
+          <%= title %>
+          </label>
+    </script>
+    <script src="js/lib/jquery-1.9.1.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+    <script src="js/models/Layer.js"></script>
+    <script src="js/collections/LayerCollection.js"></script>
+    <script src="js/views/LayerView.js"></script>
+    <script src="js/views/LayerCollectionView.js"></script>
+    <script src="js/views/LayerCollectionController.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
