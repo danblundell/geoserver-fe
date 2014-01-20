@@ -3,15 +3,30 @@ var LayerCollectionView = Backbone.View.extend({
   
   initialize: function(layerCollection) {
     this.collection = layerCollection;
+
+    // get the number of layers that aren't base-layers
+    var totalLayers = _.filter(this.collection.models,function(layer) {
+        return !layer.get("openLayer").isBaseLayer;
+    });
+
+    this.progress = new ProgressBar({current: 0, total: totalLayers.length}); // create a progress bar to show loading the non-base-layers
+
+    this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
+    this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
+    this.listenTo(this.collection, 'change:visibility', this.render); // each time a layers visibility status changes, re-render the view
+
     this.render();
-    this.collection.on("reset", this.render, this);
   },
 
   render: function() {
     this.$el.html("");
     this.collection.each(function(item){
-      this.renderItem(item);
-    }, this)
+
+      if(!item.get("openLayer").isBaseLayer) {
+        this.renderItem(item);
+      }
+
+    }, this);
   },
 
   renderItem: function(item) {
@@ -19,34 +34,26 @@ var LayerCollectionView = Backbone.View.extend({
     this.$el.append(itemView.render().el);
   },
 
-  addItem: function() {
-    var data = {};
-    $("#add").children('input[type="text"]').each(function(i, el){
-      data[el.id] = $(el).val();
-    });
-    var newItem = new Item(data);
-    this.collection.add(newItem);
-    this.renderItem(newItem);
-  },
-
-  filterByName: function() {
-    // reset the current collection to the full list
-    this.collection.reset(this.collection.items, {silent: true});
-
-    // set the match value
-    var val = $("#filter-text").val().toLowerCase();
-    console.log(val);
-    var filtered = _.filter(this.collection.models, function(item) {
-      console.log(item.get("title").substr(val));
-      return (item.get("title").toLowerCase().indexOf(val) == 0) ? true : false;
+  updateProgress: function() {
+    // count the number of loaded layers
+    var loaded = _.filter(this.collection.models,function(layer) {
+        return layer.get("loaded");
     });
 
-    this.collection.reset(filtered);
+    // update the progress model
+    this.progress.model.set("current", loaded.length); 
   },
 
-  clearFilter: function() {
-    $("#filter-text").val("");
-    this.collection.reset(this.collection.items);
+  clearLayers: function() {
+    console.log('clearing layers');
+    this.collection.each(function(layer){
+
+      // clear the layer visibility of all non-Base-layers
+      if(!layer.get("openLayer").isBaseLayer) {
+        layer.set("visibility",false);
+      }
+
+    }, this);
   }
 
 });

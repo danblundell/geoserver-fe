@@ -2,16 +2,16 @@ var LayerCollectionController = Backbone.View.extend({
     el: "body",
 
     events: {
-      "submit #add": "addItem",
+      "click #clearLayers": "clearLayers"/*,
       "keyup #filter": "filterLayers",
-      "click #clear-filter": "clearFilter"
+      "click #clear-filter": "clearFilter"*/
     },
 
     initialize: function(c) {
       this.layerCollection = new LayerCollectionView(c);
     },
 
-    addItem: function(e) {
+    /*addItem: function(e) {
       e.preventDefault();
       this.layerCollection.addItem();
     },
@@ -23,5 +23,9 @@ var LayerCollectionController = Backbone.View.extend({
     clearFilter: function(e) {
       e.preventDefault();
       this.layerCollection.clearFilter();
+    }*/
+
+    clearLayers: function() {
+      this.layerCollection.clearLayers();
     }
 });

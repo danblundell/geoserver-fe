@@ -7,12 +7,13 @@ var Map = Backbone.Model.extend({
     el: 'map'
   },
 
-  initialize: function() {
-    console.log('initialising');
-    this.set("openLayerMap", new OpenLayers.Map({
+  initialize: function(mapOptions) {
+    var options = mapOptions || {
       div: this.el,
       allLayers: true
-    }));
+    };
+
+    this.set("openLayerMap", new OpenLayers.Map(options));
   }
 
 });

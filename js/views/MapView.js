@@ -3,17 +3,46 @@ var MapView = Backbone.View.extend({
     el: "#map-wrapper",
     template: $("#mapTemplate").html(),
 
-    initialize: function(collection) {
-      this.model = new Map();
+    initialize: function(mapOptions, collection) {
+      this.model = new Map(mapOptions);
+
+      // add the layers as a property of the map
       this.model.set("layers", collection);
+      this.addLayers();
+
+      // cache the map model to save lookups
+      var map = this.model.get("openLayerMap");
+
+      map.addControl(
+        new OpenLayers.Control.PanZoomBar(
+                {
+                    position: new OpenLayers.Pixel(2, 15)
+                }
+        )
+      );
+
+      map.addControl(
+        new OpenLayers.Control.Navigation(
+                {
+                  dragPanOptions: 
+                    {
+                      enableKinetic: true
+                    }
+                }
+        )
+      );
+      //map.setCenter(new OpenLayers.LonLat(475579, 260488), 0);
+      //map.addControl(new OpenLayers.Control.DragPan());
+
+
+      // event listener for layer changes
       this.listenTo(this.model.get("layers"), "change:visibility", this.toggleLayerVisibility);
+
+      //render the map to the DOM
       this.render();
-      
-      // temp layer test
-      var osm = new OpenLayers.Layer.OSM();
-      this.model.get("openLayerMap").addLayers([osm]);
-      this.model.get("openLayerMap").addControl(new OpenLayers.Control.LayerSwitcher());
-      this.model.get("openLayerMap").zoomToMaxExtent();
+
+      //map.addControl(new OpenLayers.Control.LayerSwitcher());
+      map.zoomToMaxExtent();
     },
 
     render: function() {
@@ -29,11 +58,30 @@ var MapView = Backbone.View.extend({
       return this;
     },
 
-    toggleLayerVisibility: function(model, value, options) {
-      
-      console.log("changed "+model.get("title")+" visibility to: " + value);
+    addLayers: function() {
+      // cache the map model to save lookups
+      var map = this.model.get("openLayerMap");
 
-      // switch layer visibility
-      // model.get("openLayer").setVisibility(value);
+      // get open layers objects from the collection
+      var layers = this.model.get("layers").map(function(model){
+        return model.get('openLayer');
+      });
+
+      map.addLayers(layers);
+
+      this.model.get("layers").each(function(i,obj){
+        //console.log(obj);
+      })
+    },
+
+    toggleLayerVisibility: function(model, value, options) {
+      console.log("MAP CHANGING layer visibility to: " + value + " for layer: ");
+      console.log(model.get("openLayer"));
+      
+      if(!model.get("openLayer").isBaseLayer) {
+        // switch layer visibility
+        model.get("openLayer").setVisibility(value);
+      }
+      
     }
 });

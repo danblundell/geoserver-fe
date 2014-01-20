@@ -6,27 +6,36 @@
   </head>
   <body>
     <div id="map-wrapper"></div>
+    <div id="pro"></div>
     <!-- layer filter -->
-    <form id="filter">
+    <!--<form id="filter">
       <label>Filter</label>
       <input type="text" id="filter-text" />
     </form>
-    <a href="#" id="clear-filter">Clear Filter</a>
+    <a href="#" id="clear-filter">Clear Filter</a>-->
     <!-- /layer filter -->
 
-    <ul id="layers-control"></ul>
+    <section class="">
+      <h3>Select Layers</h3>
+      <ul id="layers-control"></ul>
+      <button id="clearLayers">Clear Layers</button>
+    </section>
     
 
+    
 
     <!-- templates -->
     <script id="layerTemplate" type="text/template">
-          <label for="<%= name %>">
-          <input type="checkbox" name="<%= name %>" class="layer-toggle" />
+          <label for="<%= name %>" <% if(!loaded) { %> class="disabled"  disabled <% } %>>
+          <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> <% if(!loaded) { %> disabled<% } %>/>
           <%= title %>
           </label>
     </script>
     <script id="mapTemplate" type="text/template">
           <div id="map"></div>
+    </script>
+    <script id="progressBarTemplate" type="text/template">
+          <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
     <!-- /templates -->
     <script src="http://openlayers.org/dev/OpenLayers.js"></script>
@@ -35,11 +44,13 @@
     <script src="js/lib/backbone-min.js"></script>
     <script src="js/models/Layer.js"></script>
     <script src="js/models/Map.js"></script>
+    <script src="js/models/Progress.js"></script>
     <script src="js/collections/LayerCollection.js"></script>
     <script src="js/views/MapView.js"></script>
     <script src="js/views/LayerView.js"></script>
     <script src="js/views/LayerCollectionView.js"></script>
     <script src="js/views/LayerCollectionController.js"></script>
+    <script src="js/views/ProgressView.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
