@@ -2,7 +2,8 @@
 
 var Layer = Backbone.Model.extend({
   defaults: {
-    visibility: false
+    visibility: false,
+    openLayer: new OpenLayers.Layer.WMS()
   }
 
 });

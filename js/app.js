@@ -8,5 +8,6 @@ $(function(){
   var layerCollection = new LayerCollection(layers);
   var layerView = new LayerCollectionController(layerCollection);
   var map = new MapView(layerCollection);
+  window.map = map;
 
 });
