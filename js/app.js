@@ -8,8 +8,7 @@ $(function(){
   		title: "SP", 
   		name:"NBC:sp", 
   		type:"WMS", 
-  		service: wmsService, 
-  		showControl: false,
+  		service: wmsService,
   		params: {
             LAYERS: 'NBC:sp',
             STYLES: '',
@@ -26,7 +25,7 @@ $(function(){
     },
     { 
     	title: "Public Spaces", 
-    	name: "NBC:PublicOpenSpaces", 
+    	name: "NBC:PublicOpenSpace", 
     	type: "WMS", 
     	service: wmsService, 
     	params: {
@@ -44,7 +43,7 @@ $(function(){
     },
     { 
     	title: "Parish Boundaries", 
-    	name: "NBC:ParishBoundaries", 
+    	name: "NBC:ParishBoundaries2013", 
     	type: "WMS", 
     	service: wmsService, 
     	params: {
@@ -63,7 +62,7 @@ $(function(){
 	},
     { 
     	title: "CCTV Cameras", 
-    	name: "NBC:CCTV", 
+    	name: "NBC:CCTVCameras", 
     	type: "WMS", 
     	service: wmsService, 
     	params: {
@@ -96,10 +95,7 @@ $(function(){
                     center: new OpenLayers.LonLat(475579, 260488)
                 };
 
-
-  var layerCollection = new LayerCollection(layers);
-  var layerControls = new LayerCollectionController(layerCollection);
-  var map = new MapView(mapOptions, layerCollection);
+  var map = new MapView(mapOptions, layers);
   window.map = map;
 
 });

@@ -1,8 +1,8 @@
 var LayerCollectionView = Backbone.View.extend({
   el: "#layers-control",
   
-  initialize: function(layerCollection) {
-    this.collection = layerCollection;
+  initialize: function(layers) {
+    this.collection = new LayerCollection(layers);
 
     // get the number of layers that aren't base-layers
     var totalLayers = _.filter(this.collection.models,function(layer) {
@@ -14,24 +14,26 @@ var LayerCollectionView = Backbone.View.extend({
     this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
     this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
     this.listenTo(this.collection, 'change:visibility', this.render); // each time a layers visibility status changes, re-render the view
-
+    this.on('layers:clear', this.clearLayers, this);
+    
     this.render();
   },
 
   render: function() {
     this.$el.html("");
-    this.collection.each(function(item){
+    this.collection.each(function(layer){
 
-      if(!item.get("openLayer").isBaseLayer) {
-        this.renderItem(item);
+      if(!layer.get("openLayer").isBaseLayer) {
+        this.renderLayer(layer);
       }
 
     }, this);
+    return this;
   },
 
-  renderItem: function(item) {
-    var itemView = new LayerView({ model: item});
-    this.$el.append(itemView.render().el);
+  renderLayer: function(layer) {
+    var layerView = new LayerView({ model: layer});
+    this.$el.append(layerView.render().el);
   },
 
   updateProgress: function() {
