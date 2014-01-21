@@ -140,8 +140,7 @@ var MapView = Backbone.View.extend({
           featureRequest.params.x = parseInt(e.xy.x);
           featureRequest.params.y = parseInt(e.xy.y);
       }
-      this.featureView = new FeatureView(featureRequest);
-      
+      this.featureView = new FeatureCollectionView(featureRequest);
       OpenLayers.Event.stop(e);
     }
 

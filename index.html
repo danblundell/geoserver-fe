@@ -42,7 +42,10 @@
           <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
     <script id="featureTemplate" type="text/template">
-          <pre><%= response %></pre>
+          <ul><%for (prop in feature.model.attributes) { %>
+              <li><%= prop %>: <%= feature.model.attributes[prop] %></li>
+            <% } %>
+            </ul>
     </script>
     <!-- /templates -->
     <script src="http://openlayers.org/dev/OpenLayers.js"></script>
@@ -54,11 +57,13 @@
     <script src="js/models/Feature.js"></script>
     <script src="js/models/Progress.js"></script>
     <script src="js/collections/LayerCollection.js"></script>
+    <script src="js/collections/FeatureCollection.js"></script>
     <script src="js/views/MapView.js"></script>
     <script src="js/views/LayerView.js"></script>
     <script src="js/views/LayerCollectionView.js"></script>
     <script src="js/views/ProgressView.js"></script>
     <script src="js/views/FeatureView.js"></script>
+    <script src="js/views/FeatureCollectionView.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
