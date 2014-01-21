@@ -23,7 +23,7 @@ var StatisticView = Backbone.View.extend({
 		if(opts.unit) {
 			this.model.set("unit",opts.unit);
 		}
-		if(opts.sup) {
+		if(opts.sup != undefined) {
 			this.model.set("sup",opts.sup);
 		}
 		this.render();
