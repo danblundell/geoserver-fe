@@ -18,12 +18,15 @@ var MapView = Backbone.View.extend({
       this.model = new Map(mapOptions);
       this.model.set("layerControls", new LayerCollectionView(layers));
       this.model.set("layers", this.model.get("layerControls").collection);
+
       
       // add the layers as a property of the map
       this.addLayers();
 
       // cache the map model to save lookups
       this._map = this.model.get("openLayerMap");
+      this.model.set("measuringControls", new MeasuringToolCollectionView(this._map));
+      
 
       this._map.addControl(
         new OpenLayers.Control.PanZoomBar(

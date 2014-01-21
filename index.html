@@ -24,7 +24,12 @@
     <div id="" class="">
       <ul id="features"><ul>
     </div>
+
+    <div id="tools">
+
+    </div>
     
+    <div id="distance"></div>
 
     
 
@@ -41,12 +46,20 @@
     <script id="progressBarTemplate" type="text/template">
           <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
+    <script id="measuringToolTemplate" type="text/template">
+          <button class="button"><%= name %></button>
+    </script>
+    <script id="statTemplate" type="text/template">
+          <h1><%= title %></h1>
+          <h2><%= value %><%= unit %><% if(sup) {%><sup><%= sup %></sup><% } %></h2>
+    </script>
     <script id="featureTemplate" type="text/template">
           <ul><%for (prop in feature.model.attributes) { %>
               <li><%= prop %>: <%= feature.model.attributes[prop] %></li>
             <% } %>
             </ul>
     </script>
+    
     <!-- /templates -->
     <script src="http://openlayers.org/dev/OpenLayers.js"></script>
     <script src="js/lib/jquery-1.9.1.min.js"></script>
@@ -56,14 +69,20 @@
     <script src="js/models/Map.js"></script>
     <script src="js/models/Feature.js"></script>
     <script src="js/models/Progress.js"></script>
+    <script src="js/models/MeasuringTool.js"></script>
+    <script src="js/models/Statistic.js"></script>
     <script src="js/collections/LayerCollection.js"></script>
     <script src="js/collections/FeatureCollection.js"></script>
+    <script src="js/collections/MeasuringToolCollection.js"></script>
     <script src="js/views/MapView.js"></script>
     <script src="js/views/LayerView.js"></script>
     <script src="js/views/LayerCollectionView.js"></script>
     <script src="js/views/ProgressView.js"></script>
     <script src="js/views/FeatureView.js"></script>
     <script src="js/views/FeatureCollectionView.js"></script>
+    <script src="js/views/MeasuringToolView.js"></script>
+    <script src="js/views/MeasuringToolCollectionView.js"></script>
+    <script src="js/views/StatisticView.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

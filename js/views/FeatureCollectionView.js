@@ -2,8 +2,6 @@ var FeatureCollectionView = Backbone.View.extend({
   el: "#features",
   
   initialize: function(request) {
-    
-    console.log("FEATURE COLLECTION");
 
     this.collection = new FeatureCollection();
 
