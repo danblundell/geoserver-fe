@@ -41,6 +41,12 @@ var MeasuringToolCollectionView = Backbone.View.extend({
                     immediate: true
                 }
             )
+        }, {
+            name: "Find a Point",
+            control: new OpenLayers.Control.DrawFeature(
+                new OpenLayers.Layer.Vector("Point Layer"),
+                OpenLayers.Handler.Point)
+
 
         }]);
 
@@ -50,9 +56,14 @@ var MeasuringToolCollectionView = Backbone.View.extend({
             control.events.on({
                 "measure": this.handleMeasurements,
                 "measurepartial": this.handleMeasurements,
+                "featureadded": this.handlePoint,
                 scope: this
             });
             this._map.addControl(control);
+            console.log("COntrol");
+            if (control.layer) {
+                control.map.addLayer(control.layer);
+            }
         }, this);
 
         // add the seperate event listeners to handle measuring and toggling
@@ -124,6 +135,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
 
     handleMeasurements: function(event) {
         var newStat = {
+            title: "Distance",
             value: event.measure.toFixed(3),
             unit: event.units,
             sup: ""
@@ -134,10 +146,28 @@ var MeasuringToolCollectionView = Backbone.View.extend({
         this.distanceView.updateStat(newStat);
     },
 
+    handlePoint: function(event) {
+        console.log(event);
+
+        event.object.insertXY(event.feature.geometry.x, event.feature.geometry.y);
+        var newStat = {
+            title: "Coordinates",
+            value: event.feature.geometry.x + "," + event.feature.geometry.y,
+            unit: "",
+            sup: ""
+        }
+
+        this.distanceView.updateStat(newStat);
+    },
+
     deactivateControls: function() {
         // TODO fix how the model and rendering gets managed.
         // See js/views/MeasuringToolView.js
         this.collection.each(function(tool) {
+
+            if (tool.get("control").layer) {
+                tool.get("control").layer.destroyFeatures();
+            }
             tool.get("control").deactivate();
             tool.set("active", false, {
                 silent: true
