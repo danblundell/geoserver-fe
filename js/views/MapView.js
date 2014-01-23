@@ -83,8 +83,6 @@ var MapView = Backbone.View.extend({
     },
 
     toggleLayerVisibility: function(model, value, options) {
-        console.log("MAP CHANGING layer visibility to: " + value + " for layer: ");
-        console.log(model.get("openLayer"));
 
         if (!model.get("openLayer").isBaseLayer) {
             // switch layer visibility
@@ -98,9 +96,7 @@ var MapView = Backbone.View.extend({
     },
 
     mapClick: function(e) {
-        console.log(this.model.get("layers"));
         var visibleLayers = _.filter(this.model.get("layers").models, function(layer) {
-            console.log(layer.get("name"));
             return (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").getVisibility()) ? true : false;
         });
 
@@ -108,7 +104,6 @@ var MapView = Backbone.View.extend({
             return layer.get("name");
         });
 
-        console.log(queryLayers);
         var featureRequest = {};
         featureRequest.e = e;
 

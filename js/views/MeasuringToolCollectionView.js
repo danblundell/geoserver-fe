@@ -60,7 +60,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
                 scope: this
             });
             this._map.addControl(control);
-            console.log("COntrol");
+
             if (control.layer) {
                 control.map.addLayer(control.layer);
             }
@@ -147,9 +147,9 @@ var MeasuringToolCollectionView = Backbone.View.extend({
     },
 
     handlePoint: function(event) {
-        console.log(event);
 
         event.object.insertXY(event.feature.geometry.x, event.feature.geometry.y);
+
         var newStat = {
             title: "Coordinates",
             value: event.feature.geometry.x + "," + event.feature.geometry.y,
