@@ -1,41 +1,50 @@
 var FeatureCollectionView = Backbone.View.extend({
-  el: "#features",
-  
-  initialize: function(request) {
+    el: "#features",
 
-    this.collection = new FeatureCollection();
+    initialize: function(request) {
 
-    //request the features from the server
-    OpenLayers.loadURL("http://localhost:8080/geoserver/NBC/wms", request.params, this, this.response, this.response);
-    OpenLayers.Event.stop(request.e);
+        this.collection = new FeatureCollection();
 
-    // listen for reset events and render the collection
-    this.collection.on('reset', this.render, this);
-  },
+        //request the features from the server
+        //request the features from the server
+        OpenLayers.Request.GET({
+            url: "http://localhost:8080/geoserver/NBC/wms",
+            params: request.params,
+            scope: this,
+            success: this.response,
+            failure: this.response
+        });
+        OpenLayers.Event.stop(request.e);
 
-  render: function() {
-    this.$el.html("");
-    this.collection.each(function(feature){
-        this.renderFeature(feature);
-    }, this);
-    return this;
-  },
+        // listen for reset events and render the collection
+        this.collection.on('reset', this.render, this);
+    },
 
-  renderFeature: function(feature) {
-    var featureView = new FeatureView({ model: feature});
-    this.$el.append(featureView.render().el);
-  },
+    render: function() {
+        this.$el.html("");
+        this.collection.each(function(feature) {
+            this.renderFeature(feature);
+        }, this);
+        return this;
+    },
 
-  response: function(data) {
+    renderFeature: function(feature) {
+        var featureView = new FeatureView({
+            model: feature
+        });
+        this.$el.append(featureView.render().el);
+    },
 
-      // parse only the feature properties - the interesting bits
-      var features = _.map($.parseJSON(data.responseText).features,function(feature){
-        return feature.properties;
-      });
+    response: function(data) {
+
+        // parse only the feature properties - the interesting bits
+        var features = _.map($.parseJSON(data.responseText).features, function(feature) {
+            return feature.properties;
+        });
 
 
-      // reset the collection
-      this.collection.reset(features);
+        // reset the collection
+        this.collection.reset(features);
     }
 
 });
