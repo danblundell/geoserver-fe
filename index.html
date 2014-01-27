@@ -41,7 +41,13 @@
           <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
     <script id="measuringToolTemplate" type="text/template">
-          <button class="button"><%= name %></button>
+          <button class="button <% if(active) { %>is-active<% } %>">
+            <% if(active) { %>
+              <%= activeName %>
+            <% } else { %>
+              <%= name %>
+            <% } %>
+          </button>
     </script>
     <script id="statTemplate" type="text/template">
           <h1><%= title %></h1>

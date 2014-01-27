@@ -14,7 +14,8 @@ var MeasuringToolCollectionView = Backbone.View.extend({
 
         // set up the collection of measurement tools
         this.collection = new MeasuringToolCollection([{
-            name: "Measure Distance",
+            name: "Measure a Distance",
+            activeName: "Stop Measuring",
             control: new OpenLayers.Control.Measure(
                 OpenLayers.Handler.Path, {
                     persist: true,
@@ -29,6 +30,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
             )
         }, {
             name: "Measure an Area",
+            activeName: "Stop Measuring",
             control: new OpenLayers.Control.Measure(
                 OpenLayers.Handler.Polygon, {
                     persist: true,
@@ -43,6 +45,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
             )
         }, {
             name: "Find a Point",
+            activeName: "Finish Points",
             control: new OpenLayers.Control.DrawFeature(
                 new OpenLayers.Layer.Vector("Point Layer"),
                 OpenLayers.Handler.Point)
@@ -50,7 +53,8 @@ var MeasuringToolCollectionView = Backbone.View.extend({
 
         }]);
 
-        // add the event listeners to the controls and add the controls to the map
+        // add the event listeners to the controls
+        // use this view as the context for callbacks
         this.collection.each(function(tool) {
             var control = tool.get("control");
             control.events.on({
@@ -59,16 +63,18 @@ var MeasuringToolCollectionView = Backbone.View.extend({
                 "featureadded": this.handlePoint,
                 scope: this
             });
+
+            //add the controls to the map
             this._map.addControl(control);
 
+            // if the control has its own layer, add that too
             if (control.layer) {
                 control.map.addLayer(control.layer);
             }
+
         }, this);
 
-        // add the seperate event listeners to handle measuring and toggling
-        //this.listenTo(this.collection, "measuringtool:measure", this, this.handleMeasurements);
-        //this.listenTo(this.collection, "measuringtool:measurepartial", this, this.handleMeasurements);
+        // add the seperate event listeners to handle toggling
         this.listenTo(this.collection, "control:changed", this.toggleControl);
 
         this.render();
@@ -92,11 +98,12 @@ var MeasuringToolCollectionView = Backbone.View.extend({
     },
 
     setStyle: function() {
-        // style the sketch fancy
+
+        // style the sketch  all fancy like
         var sketchSymbolizers = {
             "Point": {
                 pointRadius: 4,
-                graphicName: "square",
+                graphicName: "circle",
                 fillColor: "white",
                 fillOpacity: 1,
                 strokeWidth: 1,
@@ -104,7 +111,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
                 strokeColor: "#333333"
             },
             "Line": {
-                strokeWidth: 3,
+                strokeWidth: 2,
                 strokeOpacity: 1,
                 strokeColor: "#666666"
             },
@@ -118,6 +125,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
         };
 
         var style = new OpenLayers.Style();
+
         style.addRules([new OpenLayers.Rule({
             symbolizer: sketchSymbolizers
         })]);
