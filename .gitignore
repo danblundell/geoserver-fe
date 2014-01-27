@@ -42,4 +42,4 @@ tmp
 *.sass-cache
 
 ### Project Ignores
-js/build/**/*
+js/build/*

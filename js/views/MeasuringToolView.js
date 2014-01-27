@@ -1,5 +1,7 @@
-var MeasuringToolView = Backbone.View.extend({
-    model: MeasuringTool,
+var app = app || {};
+
+app.View.MeasuringToolView = Backbone.View.extend({
+    model: app.Model.MeasuringTool,
     tagName: 'li',
     className: 'measuring-tool',
     template: $("#measuringToolTemplate").html(),

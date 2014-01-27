@@ -1,3 +1,4 @@
+var app = app || {};
 $(function() {
 
     var data = {
@@ -131,6 +132,7 @@ $(function() {
         }]
     };
 
-    var map = new MapView(data);
+
+    new app.View.MapView(data);
 
 });

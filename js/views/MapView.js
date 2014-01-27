@@ -1,4 +1,6 @@
-var MapView = Backbone.View.extend({
+var app = app || {};
+
+app.View.MapView = Backbone.View.extend({
     //model: Map,
     el: "body",
     mapEl: "#map-wrapper",
@@ -29,9 +31,9 @@ var MapView = Backbone.View.extend({
             center: new OpenLayers.LonLat(config.map.center.x, config.map.center.y)
         };
 
-        this.model = new Map(mapOptions);
+        this.model = new app.Model.Map(mapOptions);
 
-        this.model.set("layerControls", new LayerCollectionView(config.layers, config.wmsService));
+        this.model.set("layerControls", new app.View.LayerCollectionView(config.layers, config.wmsService));
         this.model.set("layers", this.model.get("layerControls").collection);
 
 
@@ -40,7 +42,7 @@ var MapView = Backbone.View.extend({
 
         // cache the map model to save lookups
         this._map = this.model.get("openLayerMap");
-        this.model.set("measuringControls", new MeasuringToolCollectionView(this._map));
+        this.model.set("measuringControls", new app.View.MeasuringToolCollectionView(this._map));
 
 
         this._map.addControl(
@@ -111,7 +113,6 @@ var MapView = Backbone.View.extend({
     },
 
     mapClick: function(e) {
-        console.log(this._map);
 
         var visibleLayers = _.filter(this.model.get("layers").models, function(layer) {
             return (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").getVisibility()) ? true : false;
@@ -149,7 +150,7 @@ var MapView = Backbone.View.extend({
             featureRequest.params.x = parseInt(e.xy.x);
             featureRequest.params.y = parseInt(e.xy.y);
         }
-        this.featureView = new FeatureCollectionView(featureRequest);
+        this.featureView = new app.View.FeatureCollectionView(featureRequest);
         OpenLayers.Event.stop(e);
     }
 

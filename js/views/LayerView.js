@@ -1,4 +1,6 @@
-var LayerView = Backbone.View.extend({
+var app = app || {};
+
+app.View.LayerView = Backbone.View.extend({
     tagName: "li",
     template: $("#layerTemplate").html(),
 

@@ -1,9 +1,11 @@
-var ProgressBar = Backbone.View.extend({
+var app = app || {};
+
+app.View.ProgressBar = Backbone.View.extend({
     el: "#pro",
     template: $("#progressBarTemplate").html(),
 
     initialize: function(obj) {
-        this.model = new Progress(obj);
+        this.model = new app.Model.Progress(obj);
 
         this.model.on("change:current", this.updateProgress, this);
         this.on("progress:complete", this.log, this);

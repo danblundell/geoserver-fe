@@ -1,4 +1,10 @@
+var app = app || {
+    Model: {},
+    View: {},
+    Collection: {}
+};
 
-var Feature = Backbone.Model.extend({
-	defaults: {}
+app.Model.Feature = Backbone.Model.extend({
+    defaults: {}
+
 });

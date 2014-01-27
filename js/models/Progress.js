@@ -1,9 +1,13 @@
-// js/models/Progress.js
+var app = app || {
+    Model: {},
+    View: {},
+    Collection: {}
+};
 
-var Progress = Backbone.Model.extend({
-  defaults: {
-    current: 0,
-    total: 0,
-    complete: false
-  }
+app.Model.Progress = Backbone.Model.extend({
+    defaults: {
+        current: 0,
+        total: 0,
+        complete: false
+    }
 });

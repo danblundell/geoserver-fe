@@ -1,9 +1,11 @@
-var FeatureCollectionView = Backbone.View.extend({
+var app = app || {};
+
+app.View.FeatureCollectionView = Backbone.View.extend({
     el: "#features",
 
     initialize: function(request) {
 
-        this.collection = new FeatureCollection();
+        this.collection = new app.Collection.FeatureCollection();
 
         //request the features from the server
         //request the features from the server
@@ -29,7 +31,7 @@ var FeatureCollectionView = Backbone.View.extend({
     },
 
     renderFeature: function(feature) {
-        var featureView = new FeatureView({
+        var featureView = new app.View.FeatureView({
             model: feature
         });
         this.$el.append(featureView.render().el);

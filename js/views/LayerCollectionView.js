@@ -1,4 +1,6 @@
-var LayerCollectionView = Backbone.View.extend({
+var app = app || {};
+
+app.View.LayerCollectionView = Backbone.View.extend({
     el: "#layers-control",
 
     initialize: function(layers, serviceUrl) {
@@ -9,7 +11,7 @@ var LayerCollectionView = Backbone.View.extend({
         });
 
         // create the collection
-        this.collection = new LayerCollection(layers);
+        this.collection = new app.Collection.LayerCollection(layers);
 
         // get the number of layers that aren't base-layers
         var totalLayers = _.filter(this.collection.models, function(layer) {
@@ -17,7 +19,7 @@ var LayerCollectionView = Backbone.View.extend({
         });
 
         // create a progress bar to show loading the non-base-layers
-        this.progress = new ProgressBar({
+        this.progress = new app.View.ProgressBar({
             current: 0,
             total: totalLayers.length
         });
@@ -43,7 +45,7 @@ var LayerCollectionView = Backbone.View.extend({
     },
 
     renderLayer: function(layer) {
-        var layerView = new LayerView({
+        var layerView = new app.View.LayerView({
             model: layer
         });
         this.$el.append(layerView.render().el);

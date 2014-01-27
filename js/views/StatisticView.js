@@ -1,12 +1,14 @@
-var StatisticView = Backbone.View.extend({
-    model: Statistic,
+var app = app || {};
+
+app.View.StatisticView = Backbone.View.extend({
+    model: app.Model.Statistic,
     el: "#distance",
     tagName: 'li',
     className: 'stat',
     template: $("#statTemplate").html(),
 
     initialize: function(model) {
-        this.model = new Statistic(model);
+        this.model = new app.Model.Statistic(model);
         this.render();
     },
 

@@ -1,10 +1,12 @@
-var MeasuringToolCollectionView = Backbone.View.extend({
+var app = app || {};
+
+app.View.MeasuringToolCollectionView = Backbone.View.extend({
     el: "#tools",
 
     initialize: function(map) {
 
         this._map = map;
-        this.distanceView = new StatisticView({
+        this.distanceView = new app.View.StatisticView({
             title: "Measured Distance"
         }) || false;
 
@@ -13,7 +15,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
         this.setStyle();
 
         // set up the collection of measurement tools
-        this.collection = new MeasuringToolCollection([{
+        this.collection = new app.Collection.MeasuringToolCollection([{
             name: "Measure a Distance",
             activeName: "Stop Measuring",
             control: new OpenLayers.Control.Measure(
@@ -91,7 +93,7 @@ var MeasuringToolCollectionView = Backbone.View.extend({
     },
 
     renderTool: function(tool) {
-        var toolView = new MeasuringToolView({
+        var toolView = new app.View.MeasuringToolView({
             model: tool
         });
         this.$el.append(toolView.render().el);

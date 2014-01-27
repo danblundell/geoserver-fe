@@ -1,6 +1,10 @@
-// js/models/Item.js
+var app = app || {
+    Model: {},
+    View: {},
+    Collection: {}
+};
 
-var Layer = Backbone.Model.extend({
+app.Model.Layer = Backbone.Model.extend({
     defaults: {
         type: "WMS",
         showControl: true,

@@ -1,19 +1,23 @@
-// js/models/Map.js
+var app = app || {
+    Model: {},
+    View: {},
+    Collection: {}
+};
 
-var Map = Backbone.Model.extend({
-  defaults: {
-    // map defaults
-    center: 0,
-    el: 'map'
-  },
+app.Model.Map = Backbone.Model.extend({
+    defaults: {
+        // map defaults
+        center: 0,
+        el: 'map'
+    },
 
-  initialize: function(mapOptions) {
-    var options = mapOptions || {
-      div: this.el,
-      allLayers: true
-    };
+    initialize: function(mapOptions) {
+        var options = mapOptions || {
+            div: this.el,
+            allLayers: true
+        };
 
-    this.set("openLayerMap", new OpenLayers.Map(options));
-  }
+        this.set("openLayerMap", new OpenLayers.Map(options));
+    }
 
 });
