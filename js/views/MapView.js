@@ -8,15 +8,30 @@ var MapView = Backbone.View.extend({
         "click #clearLayers": "clearLayers"
     },
 
-    initialize: function(mapOptions, layers, mapEl) {
+    initialize: function(config, mapEl) {
 
         // set some additional view properties
         this.mapEl = mapEl || this.mapEl;
         this.$mapEl = $(this.mapEl);
 
         // connect the view to a model
+        var mapOptions = {
+            controls: [],
+            maxExtent: new OpenLayers.Bounds(
+                config.map.bounds.top,
+                config.map.bounds.left,
+                config.map.bounds.bottom,
+                config.map.bounds.right),
+            maxResolution: config.map.maxResolution,
+            projection: config.map.projection,
+            units: config.map.units,
+            div: config.map.div,
+            center: new OpenLayers.LonLat(config.map.center.x, config.map.center.y)
+        };
+
         this.model = new Map(mapOptions);
-        this.model.set("layerControls", new LayerCollectionView(layers));
+
+        this.model.set("layerControls", new LayerCollectionView(config.layers, config.wmsService));
         this.model.set("layers", this.model.get("layerControls").collection);
 
 
@@ -96,6 +111,8 @@ var MapView = Backbone.View.extend({
     },
 
     mapClick: function(e) {
+        console.log(this._map);
+
         var visibleLayers = _.filter(this.model.get("layers").models, function(layer) {
             return (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").getVisibility()) ? true : false;
         });
@@ -104,27 +121,26 @@ var MapView = Backbone.View.extend({
             return layer.get("name");
         });
 
-        var featureRequest = {};
-        featureRequest.e = e;
-
-        featureRequest.params = {
-            REQUEST: "GetFeatureInfo",
-            EXCEPTIONS: "application/json",
-            BBOX: this._map.getExtent().toBBOX(),
-            SERVICE: "WMS",
-            INFO_FORMAT: 'application/json',
-            QUERY_LAYERS: queryLayers,
-            FEATURE_COUNT: 50,
-            Layers: queryLayers,
-            WIDTH: this._map.size.w,
-            HEIGHT: this._map.size.h,
-            format: "image/png",
-            styles: this._map.layers[0].params.STYLES,
-            srs: this._map.layers[0].params.SRS
+        var featureRequest = {
+            e: e,
+            params: {
+                request: "GetFeatureInfo",
+                exceptions: "application/json",
+                bbox: this._map.getExtent().toBBOX(),
+                service: "WMS",
+                info_format: 'application/json',
+                query_layers: queryLayers,
+                feature_count: 50,
+                layers: queryLayers,
+                width: this._map.size.w,
+                height: this._map.size.h,
+                format: "image/png",
+                srs: this._map.getProjection()
+            }
         };
 
         // handle the wms 1.3 vs wms 1.1 madness
-        if (this._map.layers[0].params.VERSION == "1.3.0") {
+        if (this._map.layers[1].params.VERSION == "1.3.0") {
             featureRequest.params.version = "1.3.0";
             featureRequest.params.j = parseInt(e.xy.x);
             featureRequest.params.i = parseInt(e.xy.y);

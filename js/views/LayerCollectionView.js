@@ -1,61 +1,74 @@
 var LayerCollectionView = Backbone.View.extend({
-  el: "#layers-control",
-  
-  initialize: function(layers) {
-    this.collection = new LayerCollection(layers);
+    el: "#layers-control",
 
-    // get the number of layers that aren't base-layers
-    var totalLayers = _.filter(this.collection.models,function(layer) {
-        return !layer.get("openLayer").isBaseLayer;
-    });
+    initialize: function(layers, serviceUrl) {
 
-    this.progress = new ProgressBar({current: 0, total: totalLayers.length}); // create a progress bar to show loading the non-base-layers
+        // add the service url to each layers properties
+        _.each(layers, function(obj) {
+            obj.service = serviceUrl;
+        });
 
-    this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
-    this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
-    this.listenTo(this.collection, 'change:visibility', this.render); // each time a layers visibility status changes, re-render the view
-    this.on('layers:clear', this.clearLayers, this);
-    
-    this.render();
-  },
+        // create the collection
+        this.collection = new LayerCollection(layers);
 
-  render: function() {
-    this.$el.html("");
-    this.collection.each(function(layer){
+        // get the number of layers that aren't base-layers
+        var totalLayers = _.filter(this.collection.models, function(layer) {
+            return !layer.get("openLayer").isBaseLayer;
+        });
 
-      if(!layer.get("openLayer").isBaseLayer) {
-        this.renderLayer(layer);
-      }
+        // create a progress bar to show loading the non-base-layers
+        this.progress = new ProgressBar({
+            current: 0,
+            total: totalLayers.length
+        });
 
-    }, this);
-    return this;
-  },
+        this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
+        this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
+        this.listenTo(this.collection, 'change:visibility', this.render); // each time a layers visibility status changes, re-render the view
+        this.on('layers:clear', this.clearLayers, this);
 
-  renderLayer: function(layer) {
-    var layerView = new LayerView({ model: layer});
-    this.$el.append(layerView.render().el);
-  },
+        this.render();
+    },
 
-  updateProgress: function() {
-    // count the number of loaded layers
-    var loaded = _.filter(this.collection.models,function(layer) {
-        return layer.get("loaded");
-    });
+    render: function() {
+        this.$el.html("");
+        this.collection.each(function(layer) {
 
-    // update the progress model
-    this.progress.model.set("current", loaded.length); 
-  },
+            if (!layer.get("openLayer").isBaseLayer) {
+                this.renderLayer(layer);
+            }
 
-  clearLayers: function() {
-    console.log('clearing layers');
-    this.collection.each(function(layer){
+        }, this);
+        return this;
+    },
 
-      // clear the layer visibility of all non-Base-layers
-      if(!layer.get("openLayer").isBaseLayer) {
-        layer.set("visibility",false);
-      }
+    renderLayer: function(layer) {
+        var layerView = new LayerView({
+            model: layer
+        });
+        this.$el.append(layerView.render().el);
+    },
 
-    }, this);
-  }
+    updateProgress: function() {
+        // count the number of loaded layers
+        var loaded = _.filter(this.collection.models, function(layer) {
+            return layer.get("loaded");
+        });
+
+        // update the progress model
+        this.progress.model.set("current", loaded.length);
+    },
+
+    clearLayers: function() {
+        console.log('clearing layers');
+        this.collection.each(function(layer) {
+
+            // clear the layer visibility of all non-Base-layers
+            if (!layer.get("openLayer").isBaseLayer) {
+                layer.set("visibility", false);
+            }
+
+        }, this);
+    }
 
 });

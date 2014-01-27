@@ -22,9 +22,30 @@ var Layer = Backbone.Model.extend({
             ));
         }
         if (attrs.type == "Vector") {
-            console.log(attrs.options);
-            this.set("openLayer", new OpenLayers.Layer[attrs.type](attrs.name, attrs.options));
-            console.log(this);
+            // create the style object for the vector
+            var style = new OpenLayers.StyleMap({
+                'default': new OpenLayers.Style(attrs.styles.
+                    default),
+                rendererOptions: attrs.styles.rendererOptions,
+                'select': new OpenLayers.Style(attrs.styles.select)
+            });
+
+            // add the style to the configured attributes
+            attrs.options.styleMap = style;
+
+            // create the vector protocol object
+            var protocol = new OpenLayers.Protocol[attrs.options.protocolType](attrs.options.protocolOptions);
+            attrs.options.protocol = protocol;
+
+            // add strategy
+            attrs.options.strategies = [new OpenLayers.Strategy.Fixed({
+                preload: true
+            })];
+
+            this.set("openLayer", new OpenLayers.Layer[attrs.type](
+                attrs.name,
+                attrs.options
+            ));
         }
     }
 
