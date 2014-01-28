@@ -2,11 +2,12 @@
 <html>
   <head>
     <title>Mapping with Backbone</title>
-    <link rel="stylesheet" type="text/css" href="css/screen.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
   </head>
   <body>
-    <div id="map-wrapper" class="fl"></div>
-    <div id="pro"></div>
+    <div id="map-wrapper"></div>
+    <div id="pro" class="text--right"></div>
     <!-- layer filter -->
     <!--<form id="filter">
       <label>Filter</label>
@@ -15,14 +16,18 @@
     <a href="#" id="clear-filter">Clear Filter</a>-->
     <!-- /layer filter -->
 
-    <div id="map-controls" class="fl">
-      <h3>Select Layers</h3>
-      <ul id="layers-control"></ul>
-      <button id="clearLayers">Clear Layers</button>
-      <ul id="features"></ul>
-      <div id="tools"></div>
-      <div id="distance"></div>
-    </div>
+    <div class="grid">
+      <div class="grid__item one-third controls__layers">
+        <h3>Select Layers</h3>
+        <ul id="layers-control" class="nav nav--stacked"></ul>
+        <button id="clearLayers" class="btn btn--full">Clear Layers</button>
+      </div><!-- /.controls__layers --><div class="grid__item one-third controls__tools">
+        <ul id="tools" class="nav nav--stacked"></ul>
+        <div id="distance" class="stat-group"></div>
+      </div><!-- /.controls__tools --><div class="grid__item one-third controls__features">
+        <ul id="features"></ul>
+      </div><!-- /.controls__features -->
+    </div><!-- /.grid -->
 
     
 
@@ -30,27 +35,23 @@
     <script id="layerTemplate" type="text/template">
           <label for="<%= name %>" <% if(!loaded || !enabled) { %> class="disabled"  disabled <% } %>>
           <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> <% if(!loaded || !enabled) { %> disabled<% } %>/>
-          <%= title %>
+          <%= title %> <% if(!enabled) {%><span class="">(zoom in to enable this layer)</span><% } %>
           </label>
     </script>
     <script id="mapTemplate" type="text/template">
-          <div id="map"></div>
+          <div id="map" class="map"></div>
     </script>
     <script id="progressBarTemplate" type="text/template">
           <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
     <script id="measuringToolTemplate" type="text/template">
-          <button class="button <% if(active) { %>is-active<% } %>">
-            <% if(active) { %>
-              <%= activeName %>
-            <% } else { %>
-              <%= name %>
-            <% } %>
-          </button>
+          <button class="btn btn--full btn--positive <% if(active) { %>btn--negative<% } %>"><% if(active) { %><%= activeName %><% } else { %><%= name %><% } %></button>
     </script>
     <script id="statTemplate" type="text/template">
-          <h1><%= title %></h1>
-          <h2><%= value %><%= unit %><% if(sup) {%><sup><%= sup %></sup><% } %></h2>
+          <dl class="stat">
+            <dt class="stat__title"><%= title %></dt>
+            <dd class="stat__value"><%= value %><%= unit %><% if(sup) {%><sup><%= sup %></sup><% } %></dd>
+          </dl>
     </script>
     <script id="featureTemplate" type="text/template">
           <ul><%for (prop in feature.model.attributes) { %>
@@ -60,7 +61,9 @@
     </script>
     
     <!-- /templates -->
-    <!--<script src="js/lib/OpenLayers.js"></script>
+
+    <!--
+    <script src="js/lib/OpenLayers.js"></script>
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     <script src="js/lib/underscore-min.js"></script>
     <script src="js/lib/backbone-min.js"></script>
@@ -82,7 +85,8 @@
     <script src="js/views/MeasuringToolView.js"></script>
     <script src="js/views/MeasuringToolCollectionView.js"></script>
     <script src="js/views/StatisticView.js"></script>
-    <script src="js/app.js"></script>-->
+    <script src="js/app.js"></script>
+    -->
     <script src="js/build/app.min.js"></script>
   </body>
 </html>

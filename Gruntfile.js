@@ -33,7 +33,7 @@ module.exports = function(grunt) {
                     style: 'compressed'
                 },
                 files: {
-                    'css/build/global.css': 'css/global.scss'
+                    'css/style.css': 'css/style.scss'
                 }
             }
         },
@@ -49,8 +49,8 @@ module.exports = function(grunt) {
                 },
             },
             css: {
-                files: ['css/*.scss'],
-                tasks: [ /*'sass'*/ ],
+                files: ['css/*.scss', 'css/theme/**/*.scss'],
+                tasks: ['sass'],
                 options: {
                     spawn: false,
                 }
@@ -66,6 +66,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['concat', 'uglify', 'sass', 'watch']);
 
 };

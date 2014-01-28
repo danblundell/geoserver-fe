@@ -1,0 +1,12 @@
+.map {
+
+	height: $base-spacing-unit*20;
+	width: 100%;
+
+
+	/* 1: stop tiles from using max-width: 100% which causes them to be hidden */
+	img {
+		max-width: none; /*[1]*/
+	}
+
+}
