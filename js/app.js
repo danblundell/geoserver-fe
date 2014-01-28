@@ -18,7 +18,6 @@ $(function() {
             },
             "div": "map",
             "maxResolution": 390.625,
-            /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, .5, .25],*/
             "projection": "EPSG:27700",
             "units": "m",
         },
@@ -96,7 +95,7 @@ $(function() {
                 }
             }
         }, {
-            "title": "Public Spaces",
+            "title": "Public Spaces Raster",
             "name": "NBC:PublicOpenSpace",
             "type": "WMS",
             "params": {
@@ -111,6 +110,24 @@ $(function() {
                 "isBaseLayer": false,
                 "yx": {
                     "EPSG:27700": false
+                }
+            }
+        }, {
+            "title": "Public Spaces Vector",
+            "name": "PublicOpenSpace",
+            "type": "Vector",
+            "options": {
+                "displayInLayerSwitcher": false,
+                "extractAttributes": true,
+                "isBaseLayer": false,
+                "protocolType": "WFS",
+                "protocolOptions": {
+                    "featureType": "PublicOpenSpace",
+                    "url": "http://localhost:8080/geoserver/wfs",
+                    "geometryName": "the_geom",
+                    "featurePrefix": "WebMapping",
+                    "srsName": "EPSG:27700",
+                    "version": "1.1.0"
                 }
             }
         }, {

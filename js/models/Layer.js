@@ -28,15 +28,21 @@ app.Model.Layer = Backbone.Model.extend({
         }
         if (attrs.type == "Vector") {
             // create the style object for the vector
-            var style = new OpenLayers.StyleMap({
-                'default': new OpenLayers.Style(attrs.styles.
-                    default),
-                rendererOptions: attrs.styles.rendererOptions,
-                'select': new OpenLayers.Style(attrs.styles.select)
-            });
+            if(attrs.styles) {
+                var style = new OpenLayers.StyleMap({
+                    'default': new OpenLayers.Style(attrs.styles.
+                        default),
+                    rendererOptions: attrs.styles.rendererOptions,
+                    'select': new OpenLayers.Style(attrs.styles.select)
 
-            // add the style to the configured attributes
-            attrs.options.styleMap = style;
+
+                });
+
+
+                // add the style to the configured attributes
+                attrs.options.styleMap = style;
+            }
+
 
             // create the vector protocol object
             var protocol = new OpenLayers.Protocol[attrs.options.protocolType](attrs.options.protocolOptions);
@@ -52,7 +58,7 @@ app.Model.Layer = Backbone.Model.extend({
                 attrs.options
             ));
         }
-},
+    },
     showLayer: function() {
         this.set("visibility", true);
     },
