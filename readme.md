@@ -8,3 +8,4 @@ Dependencies include
 - [Geoserver](http://geoserver.org) - back end server and data provider, installed and configured seperately.
 - [OpenLayers.js](http://openlayers.org) - a helper library for the mapping functions
 - [Backbone.js](http://backbonejs.org) - keeps things nice and tidy yet scalable
+- [Inuit.css](http://inuitcss.com/) - a powerful, scalable, Sass-based, BEM, OOCSS framework.
