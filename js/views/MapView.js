@@ -20,10 +20,10 @@ app.View.MapView = Backbone.View.extend({
         var mapOptions = {
             controls: [],
             maxExtent: new OpenLayers.Bounds(
-                config.map.bounds.top,
                 config.map.bounds.left,
                 config.map.bounds.bottom,
-                config.map.bounds.right),
+                config.map.bounds.right,
+                config.map.bounds.top),
             maxResolution: config.map.maxResolution,
             projection: config.map.projection,
             units: config.map.units,
@@ -59,8 +59,13 @@ app.View.MapView = Backbone.View.extend({
             })
         );
 
+        this._map.addControl(
+            new OpenLayers.Control.MousePosition()
+        );
+
         // event listener for this._map clicks
         this._map.events.register("click", this, this.mapClick);
+        this._map.events.register("zoomend", this, this.handleZoom);
 
         // event listener for layer changes
         this.listenTo(this.model.get("layers"), "change:visibility", this.toggleLayerVisibility);
@@ -152,6 +157,11 @@ app.View.MapView = Backbone.View.extend({
         }
         this.featureView = new app.View.FeatureCollectionView(featureRequest);
         OpenLayers.Event.stop(e);
+    },
+
+    handleZoom: function(e) {
+        console.log(e.object);
+        this.model.get("layerControls").toggleLayers();
     }
 
 

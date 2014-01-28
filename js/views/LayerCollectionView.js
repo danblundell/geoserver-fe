@@ -26,7 +26,7 @@ app.View.LayerCollectionView = Backbone.View.extend({
 
         this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
         this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
-        this.listenTo(this.collection, 'change:visibility', this.render); // each time a layers visibility status changes, re-render the view
+        this.listenTo(this.collection, 'change:visibility change:enabled', this.render); // each time a layers visibility status changes, re-render the view
         this.on('layers:clear', this.clearLayers, this);
 
         this.render();
@@ -59,6 +59,20 @@ app.View.LayerCollectionView = Backbone.View.extend({
 
         // update the progress model
         this.progress.model.set("current", loaded.length);
+    },
+
+    toggleLayers: function() {
+        this.collection.each(function(layer) {
+            // clear the layer visibility of all non-Base-layers
+            if (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").calculateInRange()) {
+                console.log(layer.get("name") + " is in range");
+                layer.enableLayer();
+            } else if (!layer.get("openLayer").isBaseLayer && !layer.get("openLayer").calculateInRange()) {
+                console.log(layer.get("name") + " is not range");
+                layer.disableLayer();
+            }
+
+        }, this);
     },
 
     clearLayers: function() {

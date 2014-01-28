@@ -42,4 +42,12 @@ tmp
 *.sass-cache
 
 ### Project Ignores
+
+# ignore compiled js
 js/build/*
+
+# ignore inuit base files
+css/inuit.css/*
+
+# ignore compiled css
+css/*.css

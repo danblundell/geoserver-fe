@@ -5,7 +5,7 @@ app.View.LayerView = Backbone.View.extend({
     template: $("#layerTemplate").html(),
 
     events: {
-        "click input": "toggleLayer"
+        "click input": "checkboxToggleLayer"
     },
 
     initialize: function() {
@@ -15,7 +15,7 @@ app.View.LayerView = Backbone.View.extend({
         layer.events.register("loadstart", this, this.layerLoading);
         layer.events.register("loadend", this, this.layerLoaded);
 
-        this.on("change:visibility", this, this.toggleLayer);
+        //this.on("change:visibility", this, this.render);
 
         this.render();
     },
@@ -29,9 +29,13 @@ app.View.LayerView = Backbone.View.extend({
         return this;
     },
 
-    toggleLayer: function(e) {
+    checkboxToggleLayer: function(e) {
         // toggle the models visibility property
-        this.model.set("visibility", this.$el.find('input[type="checkbox"]')[0].checked);
+        this.$el.find('input[type="checkbox"]')[0].checked ? this.model.showLayer() : this.model.hideLayer();
+    },
+
+    zoomToggleLayer: function(e) {
+        // toggle the models visibility and enabled properties
     },
 
     layerLoading: function(e) {

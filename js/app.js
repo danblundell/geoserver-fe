@@ -1,4 +1,5 @@
 var app = app || {};
+
 $(function() {
 
     var data = {
@@ -6,10 +7,10 @@ $(function() {
         "tileFormat": "image/png",
         "map": {
             "bounds": {
-                "top": 460000,
-                "left": 250000,
-                "bottom": 482000,
-                "right": 260000
+                "left": 400000,
+                "bottom": 250000,
+                "right": 480000,
+                "top": 300000
             },
             "center": {
                 "x": 475579,
@@ -17,10 +18,47 @@ $(function() {
             },
             "div": "map",
             "maxResolution": 390.625,
+            /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, .5, .25],*/
             "projection": "EPSG:27700",
             "units": "m",
         },
         "layers": [{
+            "title": "SP",
+            "name": "NBC:sp",
+            "type": "WMS",
+            "params": {
+                "LAYERS": "NBC:sp",
+                "STYLES": "",
+                "tiled": true
+            },
+            "options": {
+                "buffer": 0,
+                "displayOutsideMaxExtent": true,
+                "isBaseLayer": true,
+                "yx": {
+                    "EPSG:27700": false
+                }
+            }
+        }, {
+            "title": "Vector District",
+            "name": "OSVectorDistrict",
+            "type": "WMS",
+            "params": {
+                "LAYERS": "OSVectorDistrict",
+                "STYLES": "",
+                "format": "image/png",
+                "transparent": true
+            },
+            "options": {
+                "singleTile": false,
+                "ratio": 1,
+                "isBaseLayer": false,
+                "maxResolution": 6.103515626,
+                "yx": {
+                    "EPSG:27700": false
+                }
+            }
+        }, {
             "title": "Enterprise Zones",
             "name": "EnterpriseZoneSites",
             "type": "Vector",
@@ -55,23 +93,6 @@ $(function() {
                     "featurePrefix": "WebMapping",
                     "srsName": "EPSG:27700",
                     "version": "1.1.0"
-                }
-            }
-        }, {
-            "title": "SP",
-            "name": "NBC:sp",
-            "type": "WMS",
-            "params": {
-                "LAYERS": "NBC:sp",
-                "STYLES": "",
-                "tiled": true
-            },
-            "options": {
-                "buffer": 0,
-                "displayOutsideMaxExtent": true,
-                "isBaseLayer": true,
-                "yx": {
-                    "EPSG:27700": false
                 }
             }
         }, {

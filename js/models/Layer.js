@@ -9,7 +9,8 @@ app.Model.Layer = Backbone.Model.extend({
         type: "WMS",
         showControl: true,
         visibility: true,
-        loaded: false
+        loaded: false,
+        enabled: false
     },
 
     initialize: function(attrs) {
@@ -51,6 +52,21 @@ app.Model.Layer = Backbone.Model.extend({
                 attrs.options
             ));
         }
+},
+    showLayer: function() {
+        this.set("visibility", true);
+    },
+
+    hideLayer: function() {
+        this.set("visibility", false);
+    },
+
+    disableLayer: function() {
+        this.set("enabled", false);
+    },
+
+    enableLayer: function() {
+        this.set("enabled", true);
     }
 
 });
