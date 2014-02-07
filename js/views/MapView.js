@@ -30,11 +30,16 @@ app.View.MapView = Backbone.View.extend({
             div: config.map.div,
             center: new OpenLayers.LonLat(config.map.center.x, config.map.center.y)
         };
-
         this.model = new app.Model.Map(mapOptions);
 
-        this.model.set("layerControls", new app.View.LayerCollectionView(config.layers, config.wmsService));
-        this.model.set("layers", this.model.get("layerControls").collection);
+        // set base layers
+        this.model.set("baseLayers", new app.View.LayerCollectionView(config.layers.base, config.wmsService));
+
+        // set the overlays
+        this.model.set("overlays", new app.View.LayerGroupCollectionView(config.layers.overlays, config.wmsService));
+
+        //this.model.set("layerControls", new app.View.LayerCollectionView(config.layers, config.wmsService));
+        //this.model.set("layers", this.model.get("layerControls").collection);
 
 
         // add the layers as a property of the map
@@ -47,7 +52,7 @@ app.View.MapView = Backbone.View.extend({
 
         this._map.addControl(
             new OpenLayers.Control.PanZoomBar({
-                position: new OpenLayers.Pixel(2, 15)
+                position: new OpenLayers.Pixel(10, 10)
             })
         );
 
@@ -64,11 +69,11 @@ app.View.MapView = Backbone.View.extend({
         );
 
         // event listener for this._map clicks
-        this._map.events.register("click", this, this.mapClick);
-        this._map.events.register("zoomend", this, this.handleZoom);
+        //this._map.events.register("click", this, this.mapClick);
+        //this._map.events.register("zoomend", this, this.handleZoom);
 
         // event listener for layer changes
-        this.listenTo(this.model.get("layers"), "change:visibility", this.toggleLayerVisibility);
+        //this.listenTo(this.model.get("layers"), "change:visibility", this.toggleLayerVisibility);
 
         //render the map to the DOM
         this.render();
@@ -96,12 +101,15 @@ app.View.MapView = Backbone.View.extend({
         // cache the map model to save lookups
         var map = this.model.get("openLayerMap");
 
-        // get open layers objects from the collection
-        var layers = this.model.get("layers").map(function(model) {
+        // get base layer objects from the collection
+        var layers = this.model.get("baseLayers").collection.models.map(function(model) {
             return model.get('openLayer');
         });
 
+        // go get the overlays from the group collection view
+
         map.addLayers(layers);
+        //map.addLayers(overlays);
     },
 
     toggleLayerVisibility: function(model, value, options) {
@@ -114,7 +122,7 @@ app.View.MapView = Backbone.View.extend({
     },
 
     clearLayers: function() {
-        this.model.get("layerControls").clearLayers();
+        // this.model.get("layerControls").clearLayers();
     },
 
     mapClick: function(e) {
@@ -146,7 +154,7 @@ app.View.MapView = Backbone.View.extend({
         };
 
         // handle the wms 1.3 vs wms 1.1 madness
-        if (this._map.layers[1].params.VERSION == "1.3.0") {
+        if (this._map.layers[1].params.VERSION === "1.3.0") {
             featureRequest.params.version = "1.3.0";
             featureRequest.params.j = parseInt(e.xy.x);
             featureRequest.params.i = parseInt(e.xy.y);
@@ -160,7 +168,6 @@ app.View.MapView = Backbone.View.extend({
     },
 
     handleZoom: function(e) {
-        console.log(e.object);
         this.model.get("layerControls").toggleLayers();
     }
 

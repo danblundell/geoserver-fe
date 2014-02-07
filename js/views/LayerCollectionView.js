@@ -1,24 +1,26 @@
 var app = app || {};
 
 app.View.LayerCollectionView = Backbone.View.extend({
-    el: "#layers-control",
 
-    initialize: function(layers, serviceUrl) {
+    tagName: "ul",
+
+    initialize: function(layerGroup, serviceUrl) {
 
         // add the service url to each layers properties
-        _.each(layers, function(obj) {
+        _.each(layerGroup, function(obj) {
             obj.service = serviceUrl;
         });
 
         // create the collection
-        this.collection = new app.Collection.LayerCollection(layers);
+        this.collection = new app.Collection.LayerCollection(layerGroup);
+
 
         // get the number of layers that aren't base-layers
         var totalLayers = _.filter(this.collection.models, function(layer) {
             return !layer.get("openLayer").isBaseLayer;
         });
 
-        // create a progress bar to show loading the non-base-layers
+        // // create a progress bar to show loading the non-base-layers
         this.progress = new app.View.ProgressBar({
             current: 0,
             total: totalLayers.length
@@ -52,6 +54,7 @@ app.View.LayerCollectionView = Backbone.View.extend({
     },
 
     updateProgress: function() {
+        console.log("loaded");
         // count the number of loaded layers
         var loaded = _.filter(this.collection.models, function(layer) {
             return layer.get("loaded");
@@ -65,10 +68,8 @@ app.View.LayerCollectionView = Backbone.View.extend({
         this.collection.each(function(layer) {
             // clear the layer visibility of all non-Base-layers
             if (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").calculateInRange()) {
-                console.log(layer.get("name") + " is in range");
                 layer.enableLayer();
             } else if (!layer.get("openLayer").isBaseLayer && !layer.get("openLayer").calculateInRange()) {
-                console.log(layer.get("name") + " is not range");
                 layer.disableLayer();
             }
 

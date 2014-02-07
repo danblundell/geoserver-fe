@@ -1,0 +1,16 @@
+.app {
+	position: relative;
+	width: 100%;
+}
+	.app__sidebar {
+		float: left;
+		padding: $base-spacing-unit;
+		position: relative;
+		width: 25%;
+	}
+
+	.app__main {
+		float: left;
+		position: relative;
+		width: 75%;
+	}

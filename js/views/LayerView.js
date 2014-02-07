@@ -2,6 +2,7 @@ var app = app || {};
 
 app.View.LayerView = Backbone.View.extend({
     tagName: "li",
+
     template: $("#layerTemplate").html(),
 
     events: {
@@ -15,7 +16,7 @@ app.View.LayerView = Backbone.View.extend({
         layer.events.register("loadstart", this, this.layerLoading);
         layer.events.register("loadend", this, this.layerLoaded);
 
-        //this.on("change:visibility", this, this.render);
+        this.on("change:visibility", this, this.render);
 
         this.render();
     },
@@ -31,7 +32,11 @@ app.View.LayerView = Backbone.View.extend({
 
     checkboxToggleLayer: function(e) {
         // toggle the models visibility property
-        this.$el.find('input[type="checkbox"]')[0].checked ? this.model.showLayer() : this.model.hideLayer();
+        if (this.$el.find('input[type="checkbox"]')[0].checked) {
+            this.model.showLayer();
+        } else {
+            this.model.hideLayer();
+        }
     },
 
     zoomToggleLayer: function(e) {
@@ -39,11 +44,13 @@ app.View.LayerView = Backbone.View.extend({
     },
 
     layerLoading: function(e) {
+        console.log("layer loading");
+
         this.model.trigger('layer:loading');
     },
 
     layerLoaded: function(e) {
-        console.log(e);
+        console.log("layer loaded");
         this.model.set("loaded", true);
         this.model.trigger('layer:loaded');
         this.render();

@@ -3,7 +3,22 @@ module.exports = function(grunt) {
     // 1. All configuration goes here 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
+        jshint: {
+            options: {
+                curly: true,
+                eqeqeq: true,
+                eqnull: true,
+                browser: true,
+                globals: {
+                    jQuery: true,
+                    "Backbone": true,
+                    "_": true,
+                    "OpenLayers": true,
+                    "app": true
+                }
+            },
+            files: ['js/*.js', 'js/models/*.js', 'js/views/*.js', 'js/collections/*.js', 'js/routers/*.js']
+        },
         concat: {
             // 2. Configuration for concatinating files goes here.
             dist: {
@@ -22,9 +37,23 @@ module.exports = function(grunt) {
             }
         },
         uglify: {
-            build: {
-                src: 'js/build/app.js',
-                dest: 'js/build/app.min.js'
+            my_target: {
+                options: {
+                    sourceMap: 'path/to/source-map.js'
+                },
+                files: {
+                    'js/build/app.min.js': [
+                        'js/lib/OpenLayers.js',
+                        'js/lib/jquery-1.9.1.min.js',
+                        'js/lib/underscore-min.js',
+                        'js/lib/backbone-min.js',
+                        'js/models/*.js',
+                        'js/collections/*.js',
+                        'js/views/*.js',
+                        'js/routers/*.js',
+                        'js/app.js',
+                    ]
+                }
             }
         },
         sass: {
@@ -43,7 +72,7 @@ module.exports = function(grunt) {
             },
             scripts: {
                 files: ['js/**/*.js'],
-                tasks: ['concat', 'uglify'],
+                tasks: ['jshint', 'concat', 'uglify'],
                 options: {
                     spawn: false,
                 },
@@ -60,12 +89,13 @@ module.exports = function(grunt) {
     });
 
     // 3. Where we tell Grunt we plan to use this plug-in.
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
-    grunt.registerTask('default', ['concat', 'uglify', 'sass', 'watch']);
+    grunt.registerTask('default', ['jshint', 'uglify', 'sass', 'watch']);
 
 };

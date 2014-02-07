@@ -25,7 +25,7 @@ app.View.ProgressBar = Backbone.View.extend({
     },
 
     updateProgress: function() {
-        if (this.model.get("current") == this.model.get("total")) {
+        if (this.model.get("current") === this.model.get("total")) {
             this.trigger('progress:complete');
             //this.$el.fadeOut();
         }

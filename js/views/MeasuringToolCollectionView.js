@@ -16,44 +16,46 @@ app.View.MeasuringToolCollectionView = Backbone.View.extend({
 
         // set up the collection of measurement tools
         this.collection = new app.Collection.MeasuringToolCollection([{
-            name: "Measure a Distance",
-            activeName: "Stop Measuring",
-            control: new OpenLayers.Control.Measure(
-                OpenLayers.Handler.Path, {
-                    persist: true,
-                    handlerOptions: {
-                        layerOptions: {
-                            renderers: this.renderer,
-                            styleMap: this.styleMap
-                        }
-                    },
-                    immediate: true
-                }
-            )
-        }, {
-            name: "Measure an Area",
-            activeName: "Stop Measuring",
-            control: new OpenLayers.Control.Measure(
-                OpenLayers.Handler.Polygon, {
-                    persist: true,
-                    handlerOptions: {
-                        layerOptions: {
-                            renderers: this.renderer,
-                            styleMap: this.styleMap
-                        }
-                    },
-                    immediate: true
-                }
-            )
-        }, {
-            name: "Find a Point",
+                name: "Measure a Distance",
+                activeName: "Stop Measuring",
+                control: new OpenLayers.Control.Measure(
+                    OpenLayers.Handler.Path, {
+                        persist: true,
+                        handlerOptions: {
+                            layerOptions: {
+                                renderers: this.renderer,
+                                styleMap: this.styleMap
+                            }
+                        },
+                        immediate: true
+                    }
+                )
+            }, {
+                name: "Measure an Area",
+                activeName: "Stop Measuring",
+                control: new OpenLayers.Control.Measure(
+                    OpenLayers.Handler.Polygon, {
+                        persist: true,
+                        handlerOptions: {
+                            layerOptions: {
+                                renderers: this.renderer,
+                                styleMap: this.styleMap
+                            }
+                        },
+                        immediate: true
+                    }
+                )
+            }
+            /*, {
+            name: "Find Coordinates",
             activeName: "Finish Points",
             control: new OpenLayers.Control.DrawFeature(
                 new OpenLayers.Layer.Vector("Point Layer"),
                 OpenLayers.Handler.Point)
 
 
-        }]);
+        }*/
+        ]);
 
         // add the event listeners to the controls
         // use this view as the context for callbacks
@@ -113,14 +115,14 @@ app.View.MeasuringToolCollectionView = Backbone.View.extend({
                 strokeColor: "#333333"
             },
             "Line": {
-                strokeWidth: 2,
+                strokeWidth: 3,
                 strokeOpacity: 1,
-                strokeColor: "#666666"
+                strokeColor: "#ff0000"
             },
             "Polygon": {
-                strokeWidth: 2,
+                strokeWidth: 3,
                 strokeOpacity: 1,
-                strokeColor: "#666666",
+                strokeColor: "#ff0000",
                 fillColor: "white",
                 fillOpacity: 0.3
             }
@@ -149,8 +151,8 @@ app.View.MeasuringToolCollectionView = Backbone.View.extend({
             value: event.measure.toFixed(3),
             unit: event.units,
             sup: ""
-        }
-        if (event.order != 1) {
+        };
+        if (event.order !== 1) {
             newStat.sup = "2";
         }
         this.distanceView.updateStat(newStat);
@@ -165,7 +167,7 @@ app.View.MeasuringToolCollectionView = Backbone.View.extend({
             value: event.feature.geometry.x + "," + event.feature.geometry.y,
             unit: "",
             sup: ""
-        }
+        };
 
         this.distanceView.updateStat(newStat);
     },

@@ -22,13 +22,13 @@ app.View.StatisticView = Backbone.View.extend({
         if (opts.value) {
             this.model.set("value", opts.value);
         }
-        if (opts.unit != undefined) {
+        if (opts.unit !== undefined) {
             this.model.set("unit", opts.unit);
         }
-        if (opts.sup != undefined) {
+        if (opts.sup !== undefined) {
             this.model.set("sup", opts.sup);
         }
-        if (opts.title != undefined) {
+        if (opts.title !== undefined) {
             this.model.set("title", opts.title);
         }
         this.render();

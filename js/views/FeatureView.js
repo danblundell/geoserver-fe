@@ -3,7 +3,7 @@ var app = app || {};
 app.View.FeatureView = Backbone.View.extend({
     //model: Map,
     tagName: "li",
-    className: ".feature",
+    className: "feature",
     template: $("#featureTemplate").html(),
 
     initialize: function(feature) {
