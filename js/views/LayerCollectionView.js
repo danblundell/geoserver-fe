@@ -14,22 +14,16 @@ app.View.LayerCollectionView = Backbone.View.extend({
         // create the collection
         this.collection = new app.Collection.LayerCollection(layerGroup);
 
-
-        // get the number of layers that aren't base-layers
-        var totalLayers = _.filter(this.collection.models, function(layer) {
-            return !layer.get("openLayer").isBaseLayer;
-        });
-
-        // // create a progress bar to show loading the non-base-layers
-        this.progress = new app.View.ProgressBar({
-            current: 0,
-            total: totalLayers.length
-        });
+        // create a progress bar to show loading the non-base-layers
+        // this.progress = new app.View.ProgressBar({
+        //     current: 0,
+        //     total: totalLayers.length
+        // });
 
         this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
-        this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
-        this.listenTo(this.collection, 'change:visibility change:enabled', this.render); // each time a layers visibility status changes, re-render the view
-        this.on('layers:clear', this.clearLayers, this);
+        //this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
+        //this.listenTo(this.collection, 'change:visibility change:enabled', this.render); // each time a layers visibility status changes, re-render the view
+        //this.on('layers:clear', this.clearLayers, this);
 
         this.render();
     },
@@ -54,14 +48,7 @@ app.View.LayerCollectionView = Backbone.View.extend({
     },
 
     updateProgress: function() {
-        console.log("loaded");
-        // count the number of loaded layers
-        var loaded = _.filter(this.collection.models, function(layer) {
-            return layer.get("loaded");
-        });
-
-        // update the progress model
-        this.progress.model.set("current", loaded.length);
+        this.trigger('layer:loaded');
     },
 
     toggleLayers: function() {

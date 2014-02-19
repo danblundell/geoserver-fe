@@ -24,12 +24,13 @@ $(function() {
         "layers": {
             "base": [{
                     "title": "SP",
-                    "name": "NBC:sp",
+                    "name": "NBC:osSpRaster",
                     "type": "WMS",
                     "params": {
-                        "LAYERS": "NBC:sp",
+                        "LAYERS": "NBC:osSpRaster",
                         "STYLES": "",
-                        "tiled": true
+                        "tiled": true,
+                        "exceptions":"application/json",
                     },
                     "options": {
                         "buffer": 0,
@@ -88,7 +89,47 @@ $(function() {
                     },
                     "options": {
                         "displayInLayerSwitcher": false,
-                        "resolutions": [100, 50, 10, 5, 2.5, 1.25, 0.5, 0.25],
+                        /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, 0.5, 0.25],*/
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "EnterpriseZoneSites",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
+                }]
+            },{
+                "title": "Second Set",
+                "layers": [{
+                    "title": "Enterprise Zones 2",
+                    "name": "EnterpriseZoneSites",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#ff00ff",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#ff9933",
+                            "fillOpacity": 0.75,
+                            "strokeWidth": 3
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
+                        /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, 0.5, 0.25],*/
                         "extractAttributes": true,
                         "isBaseLayer": false,
                         "protocolType": "WFS",

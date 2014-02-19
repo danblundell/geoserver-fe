@@ -6,6 +6,8 @@ app.View.LayerGroupView = Backbone.View.extend({
 
     initialize: function() {
         this.model.set("layerCollection", new app.View.LayerCollectionView(this.model.get("layers"), this.model.get("serviceUrl")));
+
+        this.listenTo(this.model.get("layerCollection"), "layer:loaded", this.updateProgress);
         this.render();
     },
 
@@ -17,6 +19,10 @@ app.View.LayerGroupView = Backbone.View.extend({
         this.$el.html(templ(this.model.toJSON())).append(this.model.get("layerCollection").render().el);
 
         return this;
+    },
+
+    updateProgress: function() {
+        this.model.trigger("layer:loaded");
     }
 
 });

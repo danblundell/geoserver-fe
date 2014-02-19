@@ -122,8 +122,8 @@
     <!-- templates -->
     <script id="layerTemplate" type="text/template">
           <label for="<%= name %>" <% if(!loaded || !enabled) { %> class="disabled"  disabled <% } %>>
-          <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> <% if(!loaded || !enabled) { %> disabled<% } %>/>
-          <%= title %> <% if(!enabled) {%><span class="">(zoom in to enable this layer)</span><% } %>
+          <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> />
+          <%= title %>
           </label>
     </script>
     <script id="mapTemplate" type="text/template">

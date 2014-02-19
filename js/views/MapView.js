@@ -16,7 +16,7 @@ app.View.MapView = Backbone.View.extend({
         this.mapEl = mapEl || this.mapEl;
         this.$mapEl = $(this.mapEl);
 
-        // connect the view to a model
+        // set the map options from the config argument
         var mapOptions = {
             controls: [],
             maxExtent: new OpenLayers.Bounds(
@@ -30,27 +30,43 @@ app.View.MapView = Backbone.View.extend({
             div: config.map.div,
             center: new OpenLayers.LonLat(config.map.center.x, config.map.center.y)
         };
+
+        // set the model
         this.model = new app.Model.Map(mapOptions);
 
-        // set base layers
+        // cache a reference to the map object to save lookups
+        this._map = this.model.get("openLayerMap");
+
+        // create the base layers
         this.model.set("baseLayers", new app.View.LayerCollectionView(config.layers.base, config.wmsService));
 
-        // set the overlays
+        // create the overlay layers
         this.model.set("overlays", new app.View.LayerGroupCollectionView(config.layers.overlays, config.wmsService));
 
-        //this.model.set("layerControls", new app.View.LayerCollectionView(config.layers, config.wmsService));
-        //this.model.set("layers", this.model.get("layerControls").collection);
-
-
-        // add the layers as a property of the map
-        this.addLayers();
-
-        // cache the map model to save lookups
-        this._map = this.model.get("openLayerMap");
+        // create some measuring controls and attach them to the map
         this.model.set("measuringControls", new app.View.MeasuringToolCollectionView(this._map));
 
+        // attach the layers to the open layers map object
+        this.addLayers();
 
-        this._map.addControl(
+        // add some controls to the map
+        this.addControls();
+        
+        // event listener for this._map clicks
+        this._map.events.register("click", this, this.getFeatures);
+        //this._map.events.register("zoomend", this, this.handleZoom);
+
+        // event listener for layer changes
+        //this.listenTo(this.model.get("overlays"), "change:visibility", this.toggleLayerVisibility);
+
+        //render the map to the DOM
+        this.render();
+        this.centerMap('475579', '260488', 4);
+    },
+
+    addControls: function() {
+        if(this._map) {
+            this._map.addControl(
             new OpenLayers.Control.PanZoomBar({
                 position: new OpenLayers.Pixel(10, 10)
             })
@@ -66,18 +82,10 @@ app.View.MapView = Backbone.View.extend({
 
         this._map.addControl(
             new OpenLayers.Control.MousePosition()
-        );
+        );    
 
-        // event listener for this._map clicks
-        //this._map.events.register("click", this, this.mapClick);
-        //this._map.events.register("zoomend", this, this.handleZoom);
-
-        // event listener for layer changes
-        //this.listenTo(this.model.get("layers"), "change:visibility", this.toggleLayerVisibility);
-
-        //render the map to the DOM
-        this.render();
-        this.centerMap('475579', '260488', 4);
+        }
+        
     },
 
     render: function() {
@@ -107,33 +115,35 @@ app.View.MapView = Backbone.View.extend({
         });
 
         // go get the overlays from the group collection view
+        var overlays = this.getOpenLayers(this.getAllOverlays());
 
         map.addLayers(layers);
-        //map.addLayers(overlays);
+        map.addLayers(overlays);
     },
 
-    toggleLayerVisibility: function(model, value, options) {
 
-        if (!model.get("openLayer").isBaseLayer) {
-            // switch layer visibility
-            model.get("openLayer").setVisibility(value);
-        }
-
-    },
-
-    clearLayers: function() {
-        // this.model.get("layerControls").clearLayers();
-    },
-
-    mapClick: function(e) {
-
-        var visibleLayers = _.filter(this.model.get("layers").models, function(layer) {
-            return (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").getVisibility()) ? true : false;
+    /**
+     * Gets the OpenLayers from an array of Layer models
+     * @param  {Array[app.Model.Layer]} arr
+     * @return {Array[OpenLayers.OpenLayer]}
+     */
+    getOpenLayers: function(arr) {
+        return arr.map(function(model){
+            return model.get('openLayer');
         });
+    },
 
-        var queryLayers = _.map(visibleLayers, function(layer) {
-            return layer.get("name");
-        });
+    /**
+     * Creates an app.View.FeatureCollectionView
+     * 
+     * @param  {ClickEvent} e
+     * @return {Void}
+     */
+    getFeatures: function(e) {
+
+        var visibleLayers = this.getVisibleOverlays();
+
+        var queryLayers = this.getLayerNames(visibleLayers);
 
         var featureRequest = {
             e: e,
@@ -154,7 +164,7 @@ app.View.MapView = Backbone.View.extend({
         };
 
         // handle the wms 1.3 vs wms 1.1 madness
-        if (this._map.layers[1].params.VERSION === "1.3.0") {
+        if (visibleLayers[0].get("openLayer").protocol.version === "1.3.0") {
             featureRequest.params.version = "1.3.0";
             featureRequest.params.j = parseInt(e.xy.x);
             featureRequest.params.i = parseInt(e.xy.y);
@@ -163,12 +173,57 @@ app.View.MapView = Backbone.View.extend({
             featureRequest.params.x = parseInt(e.xy.x);
             featureRequest.params.y = parseInt(e.xy.y);
         }
+
         this.featureView = new app.View.FeatureCollectionView(featureRequest);
         OpenLayers.Event.stop(e);
     },
 
+    /**
+     * Gets all layers from the Overlays attribute
+     * @return Array[app.Model.Layer]
+     */
+    getAllOverlays: function() {
+        // go get the overlays from the group collection view
+        var groups = this.model.get("overlays").collection.models; // returns an array of layer groups
+        
+        // hold the overlay layers
+        var overlays = [];
+
+        for(var x = 0; x < groups.length; x++) {
+            var overlayers = groups[x].get("layerCollection").collection.models; // gets an array of layers from the layer collection
+            overlays = overlays.concat(overlayers); // adds the array from the layer group to the master array of all layers
+        }
+
+        return overlays;
+    },
+
+    /**
+     * Gets all the visible overlay layers
+     * @return Array[app.Model.Layer]
+     */
+    getVisibleOverlays: function() {
+        var overlays = this.getAllOverlays();
+
+        return _.filter(overlays, function(layer) {
+            return (!layer.get("openLayer").isBaseLayer && layer.get("openLayer").getVisibility()) ? true : false;
+        });
+    },
+
+    /**
+     * Gets an array containing the name 
+     * attribute for each of the OpenLayers
+     * 
+     * @param  Array[app.Model.Layer] layers
+     * @return Array[String]
+     */
+    getLayerNames: function(layers) {
+        return _.map(layers, function(layer) {
+            return layer.get("name");
+        });
+    },
+
     handleZoom: function(e) {
-        this.model.get("layerControls").toggleLayers();
+        this.model.get("overlays").toggleLayers();
     }
 
 

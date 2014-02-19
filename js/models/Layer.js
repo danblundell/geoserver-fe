@@ -60,18 +60,22 @@ app.Model.Layer = Backbone.Model.extend({
                 preload: true
             })];
 
-            this.set("openLayer", new OpenLayers.Layer[attrs.type](
+            var lay = new OpenLayers.Layer[attrs.type](
                 attrs.name,
                 attrs.options
-            ));
+            );
+            console.log(lay);
+            this.set("openLayer", lay);
         }
     },
     showLayer: function() {
         this.set("visibility", true);
+        this.get("openLayer").setVisibility(true);
     },
 
     hideLayer: function() {
         this.set("visibility", false);
+        this.get("openLayer").setVisibility(false);
     },
 
     disableLayer: function() {
