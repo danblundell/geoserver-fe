@@ -102,6 +102,79 @@ $(function() {
                             "version": "1.1.0"
                         }
                     }
+                },
+                {
+                    "title": "CCTV Cameras",
+                    "name": "CCTVCameras",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#00ffff",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#ff9933",
+                            "fillOpacity": 1,
+                            "strokeWidth": 3
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "CCTVCameras",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
+                },{
+                    "title": "Public Open Space",
+                    "name": "PublicOpenSpace",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#009900",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#009900",
+                            "fillOpacity": 0.75,
+                            "strokeWidth": 0
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "PublicOpenSpace",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
                 }]
             },{
                 "title": "Second Set",

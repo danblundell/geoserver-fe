@@ -1,7 +1,7 @@
 var app = app || {};
 
 app.View.LayerGroupView = Backbone.View.extend({
-    className: "layerGroup",
+    className: "layers-control__group js-accordion",
     template: $("#layerGroupTemplate").html(),
 
     initialize: function() {
@@ -16,8 +16,8 @@ app.View.LayerGroupView = Backbone.View.extend({
         var templ = _.template(this.template);
 
         // render this views template and the child collection view too
-        this.$el.html(templ(this.model.toJSON())).append(this.model.get("layerCollection").render().el);
-
+        this.$el.html(templ(this.model.toJSON())).find(".js-accordion-content").html(this.model.get("layerCollection").render().el);
+        
         return this;
     },
 

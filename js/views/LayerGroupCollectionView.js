@@ -3,6 +3,10 @@ var app = app || {};
 app.View.LayerGroupCollectionView = Backbone.View.extend({
     el: "#layers-control",
 
+    events: {
+        "click .js-accordion-title": "accordionize"
+    },
+
     initialize: function(layerGroups, serviceUrl) {
         this.serviceUrl = serviceUrl;
 
@@ -15,36 +19,34 @@ app.View.LayerGroupCollectionView = Backbone.View.extend({
         }, this);
 
         // get all the layers from all the groups
-        var totalLayers = [];
-        var layerGroupModels = this.collection.models; // layer group collection models
+        var totalLayers = 0;
 
         // for each layer group model
         this.collection.each(function(layerGroup){
-            console.log("LAYER GROUP");
-            console.log(layerGroup.get("title"));
-            console.log(layerGroup);
-            //this.getLayers(layerGroupM);
+           totalLayers += layerGroup.get("layers").length;
         },this);
 
-        totalLayers = [1,2];
         //set up a progress bar to show the layer loading progress
         this.progress = new app.View.ProgressBar({
             current: 0,
-            total: totalLayers.length
+            total: totalLayers
         });
 
+        // listens to the event chain through the collections
         this.listenTo(this.collection, "layer:loaded", this.updateProgress);
 
         this.render();
     },
 
-    getLayers: function(collection) {
-        collection.each(function(model) {
-                console.log("LAYER COLLECTION COLLECTION");
-                console.log(model);
-                console.log(model.get("title"));
-                console.log(model.get("layerCollection")); // layer   
-            });
+    getLayers: function() {
+        var layers = [];
+
+        this.collection.each(function(model) {
+            var collection = model.get("layerCollection").collection; // layer
+            layers = layers.concat(collection.models);
+        });
+
+        return layers;
     },
 
     render: function() {
@@ -65,12 +67,23 @@ app.View.LayerGroupCollectionView = Backbone.View.extend({
     updateProgress: function() {
         console.log("updating progress");
         // count the number of loaded layers
-        // var loaded = _.filter(this.collection.models, function(layer) {
-        //     return layer.get("loaded");
-        // });
+        var loaded = _.filter(this.getLayers(), function(layer){
+            return layer.get("loaded");
+        });
+
+        console.log(loaded);
 
         // update the progress model
-        //this.progress.model.set("current", loaded.length);
+        this.progress.model.set("current", loaded.length);
     },
+
+    accordionize: function(e) {
+        
+        if(!this.$el.find(e.target).parent().hasClass("active")) {
+            this.$el.find(".js-accordion-title").parent().removeClass("active");
+            this.$el.find(e.target).parent().addClass("active");    
+        }
+        
+    } 
 
 });

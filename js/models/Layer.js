@@ -45,7 +45,7 @@ app.Model.Layer = Backbone.Model.extend({
 
                 // add the style to the configured attributes
                 attrs.options.styleMap = style;
-                console.log(attrs.options.styleMap);
+
             }
 
 
@@ -64,7 +64,7 @@ app.Model.Layer = Backbone.Model.extend({
                 attrs.name,
                 attrs.options
             );
-            console.log(lay);
+
             this.set("openLayer", lay);
         }
     },

@@ -17,10 +17,6 @@
 @import "vars";
 @import "inuit.css/inuit";
 
-
-
-
-
 /**
  * She’s all yours, cap’n... Begin importing your stuff here.
  */
@@ -31,4 +27,6 @@
 @import "theme/objects/map";
 @import "theme/objects/maptool";
 @import "theme/objects/features";
+@import "theme/objects/layer-controls";
+@import "theme/objects/js-accordion";
 

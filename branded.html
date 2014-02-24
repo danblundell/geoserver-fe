@@ -90,8 +90,7 @@
 			<div class="app">
 				<div class="app__sidebar">
 					<div class="controls__layers">
-      					<h3>Select Layers</h3>
-      					<div id="layers-control"></div>
+      					<div id="layers-control" class="layers-control"></div>
         				<button id="clearLayers" class="btn btn--nbc">Clear Layers</button>
       				</div><!-- /.controls__layers -->
       				<div class="controls__features">
@@ -122,8 +121,8 @@
     <!-- templates -->
     <script id="layerTemplate" type="text/template">
           <label for="<%= name %>" <% if(!loaded || !enabled) { %> class="disabled"  disabled <% } %>>
-          <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> />
-          <%= title %>
+          <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> <% if(!loaded || !enabled) { %> disabled<% } %>/>
+          <%= title %> <% if(!enabled) {%><span class="">(zoom in to enable this layer)</span><% } %>
           </label>
     </script>
     <script id="mapTemplate" type="text/template">
@@ -142,13 +141,20 @@
           </dl>
     </script>
     <script id="featureTemplate" type="text/template">
-          <ul><%for (prop in feature.model.attributes) { %>
-              <li><%= prop %>: <%= feature.model.attributes[prop] %></li>
+          <table class="features--table">
+          	<tbody>
+          	<%for (prop in feature.model.attributes) { %>
+              <tr>
+              	<td><%= prop %></td>
+              	<td><%= feature.model.attributes[prop] %></td>
+              </tr>
             <% } %>
-            </ul>
+            </tbody>
+          </table>
     </script>
     <script id="layerGroupTemplate" type="text/template">
-          <h3><%= title %></h3>
+          <h3 class="layers-control__group__title js-accordion-title"><%= title %></h3>
+          <div class="js-accordion-content"></div>
     </script>
     
     <!-- /templates -->
