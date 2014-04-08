@@ -16,7 +16,7 @@ app.View.LayerCollectionView = Backbone.View.extend({
 
         this.listenTo(this.collection, 'layer:loaded', this.updateProgress); // each time a layer loads, update the progress bar
         //this.listenTo(this.progress, 'progress:complete', this.clearLayers); // each time a layer loads, update the progress bar
-        //this.listenTo(this.collection, 'change:visibility change:enabled', this.render); // each time a layers visibility status changes, re-render the view
+        this.listenTo(this.collection, 'change:visibility change:enabled', this.render); // each time a layers visibility status changes, re-render the view
         //this.on('layers:clear', this.clearLayers, this);
 
         this.render();

@@ -4,13 +4,13 @@
 		max-height: 0;
 		height: auto;
 		overflow: hidden;
-		@include vendor(transition, .2s ease-in-out);
+		@include vendor(transition, max-height .3s ease-in);
 	}
 
 	&.active {
 
 		> .js-accordion-content {
-			max-height: 1000px;
+			max-height: 500px;
 			height: auto;
 		}
 	}

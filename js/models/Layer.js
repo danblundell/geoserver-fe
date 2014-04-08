@@ -13,59 +13,102 @@ app.Model.Layer = Backbone.Model.extend({
         enabled: false
     },
 
-    initialize: function(attrs) {
+    initialize: function(layer) {
 
+        var self = this;
+        var ol = {
+            title: layer.name,
+            options: {}, 
+            params: {}
+        };
+        var lay;
         // set the layers default option
-        //attrs.options.visibility = this.defaults.visibility;
+        ol.options.visibility = this.defaults.visibility;
 
-        if (attrs.type === "WMS") {
-            attrs.params.strategies = [new OpenLayers.Strategy.Fixed({
-                preload: true
-            })];
+        if (layer.type === "WMS") {
+            ol.type = layer.type;
 
+            ol.params.layers = layer.name;
+            ol.params.styles = "";
+            ol.params.tiled = true;
+            ol.params.exceptions = "application/json";
+            ol.params.strategies = [new OpenLayers.Strategy.Fixed({preload: true})];
+            ol.params.tileSize = new OpenLayers.Size(256,256);
 
-
-            this.set("openLayer", new OpenLayers.Layer[attrs.type](
-                attrs.title,
-                attrs.service,
-                attrs.params,
-                attrs.options
-            ));
-        }
-        if (attrs.type === "Vector") {
-            // create the style object for the vector
-            if (attrs.styles) {
-                var style = new OpenLayers.StyleMap({
-                    'default': new OpenLayers.Style(attrs.styles.
-                        default),
-                    rendererOptions: attrs.styles.rendererOptions,
-                    'select': new OpenLayers.Style(attrs.styles.select)
-                });
+            ol.options = {
+                        buffer: 0,
+                        displayOutsideMaxExtent: true,
+                        isBaseLayer: true,
+                        yx: {
+                            "EPSG:27700": true
+                        }
+                    };
 
 
-                // add the style to the configured attributes
-                attrs.options.styleMap = style;
-
-            }
-
-
-            // create the vector protocol object
-            var protocol = new OpenLayers.Protocol[attrs.options.protocolType](attrs.options.protocolOptions);
-            attrs.options.protocol = protocol;
-
-            attrs.options.visibility = this.defaults.visibility;
-
-            // add strategy
-            attrs.options.strategies = [new OpenLayers.Strategy.Fixed({
-                preload: true
-            })];
-
-            var lay = new OpenLayers.Layer[attrs.type](
-                attrs.name,
-                attrs.options
+            lay = new OpenLayers.Layer[ol.type](
+                ol.title,
+                layer.service,
+                ol.params,
+                ol.options
             );
 
             this.set("openLayer", lay);
+        } else {
+            ol.type = "Vector";
+
+            // create the style object for the vector
+            var style = new OpenLayers.StyleMap({
+                rendererOptions: {yOrdering: true}
+            });
+
+            // add the style to the configured attributes
+            ol.options.styleMap = style;
+
+            console.log("Vector Layer");
+            console.log(layer.name);
+            console.log(layer.title);
+            console.log(ol);
+            console.log(ol.title);
+            // create the vector protocol object
+            var protocol = new OpenLayers.Protocol.WFS({
+                            "featureType": layer.title,
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        });
+
+            ol.options.protocol = protocol;
+
+            ol.options.visibility = this.defaults.visibility;
+
+            // add strategy
+            ol.options.strategies = [new OpenLayers.Strategy.Fixed({
+                preload: true
+            })];
+
+            ol.options.tileSize = new OpenLayers.Size(256,256);
+
+            lay = new OpenLayers.Layer[ol.type](
+                layer.title,
+                ol.options
+            );
+
+            this.set("openLayer", lay);
+
+            var sldUrl = "http://localhost:8080/geoserver/styles/"+layer.title+".sld";
+
+            OpenLayers.Request.GET({
+                url: sldUrl,
+                success: function(req) {
+                    var format = new OpenLayers.Format.SLD();
+                    self.sld = format.read(req.responseText || req.responseXML);
+                    var style = self.sld.namedLayers[layer.title].userStyles[0];
+                    self.get("openLayer").styleMap.styles["default"] = style;
+                    
+                }
+            });
         }
     },
     showLayer: function() {
@@ -84,6 +127,15 @@ app.Model.Layer = Backbone.Model.extend({
 
     enableLayer: function() {
         this.set("enabled", true);
+    },
+
+    getSld: function(sldUrl) {
+        var self = this;
+        
+    },
+
+    processSld: function(req) {
+        
     }
 
 });

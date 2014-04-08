@@ -1,17 +1,115 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Mapping with Backbone and OpenLayers.js</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+<html lang="en"><head><style type="text/css">.gm-style .gm-style-mtc label,.gm-style .gm-style-mtc div{font-weight:400}</style><style type="text/css">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px}</style><link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700"><style type="text/css">@media print {  .gm-style .gmnoprint, .gmnoprint {    display:none  }}@media screen {  .gm-style .gmnoscreen, .gmnoscreen {    display:none  }}</style><style type="text/css">.gm-style{font-family:Roboto,Arial,sans-serif;font-size:11px;font-weight:400;text-decoration:none}</style>
+		<title>Northampton Borough Council : Report a Problem</title>
+		<!--<link rel="stylesheet" type="text/css" href="http://selfserve.northampton.gov.uk/mycouncil/css/base.css">-->
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="Shortcut Icon" type="image/x-icon" href="images/favicon.ico">
+		<link rel="apple-touch-icon" href="/site/apple-touch-icon.png">
+		<link rel="ToC" href="http://www.northampton.gov.uk/site_map">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  </head>
-  <body>
-    <div id="map-wrapper"></div>
-    <div id="pro" class="text--right"></div>
+		<!-- general metadata -->
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="robots" content="index,follow">
+		<meta name="revisit-after" content="2 days">
+		<meta name="Author" content="Northampton Borough Council">
+		<meta name="Publisher-Email" content="webmaster@northampton.gov.uk">
+		<meta name="Coverage" content="House, street, village, hamlet, town, county, country, worldwide">
+		<meta http-equiv="content-language" content="en">
+
+		<!-- Dublin Core Metadata -->
+		<meta name="DC.creator" lang="en" content="Northampton Borough Council">
+		<meta name="DC.date.created" lang="en" scheme="DCTERMS.W3CDTF" content="2005-04-01">
+		<meta name="DC.format" lang="en" scheme="DCTERMS.IMT" content="text/html">
+		<meta name="DC.language" scheme="DCTERMS.ISO639-1" content="en">
+		<meta name="DC.publisher" lang="en" content="Northampton Borough Council">
+		<meta name="DC.rights.copyright" lang="en" content="Northampton Borough Council">
+		<meta name="DC.coverage" lang="en" content="House, street, village, hamlet, town, county, country, worldwide">
+		<meta name="DC.identifier" scheme="DCTERMS.URI" content="http://www.northampton.gov.uk/">
+
+		<!-- eGMS Metadata -->
+		<meta name="eGMS.status" lang="en" content="V1.0 Public Consumption">
+		<meta name="eGMS.accessibility" scheme="WCAG" content="Double-A">
+		<meta name="Keywords" content="NBC, town, management">
+		<meta name="Description" content="Northampton Borough Council homepage. Information on council tax, planning, housing, business rates, benefits, museums, consultations, councillors, parking, waste and recycling and more.">
+		<meta name="DC.title" lang="en" content="Northampton Borough Council - Tel: 0300 330 7000">
+		<meta name="DC.description" lang="en" content="Northampton Borough Council homepage. Information on council tax, planning, housing, business rates, benefits, museums, consultations, councillors, parking, waste and recycling and more.">
+
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.northampton.gov.uk/rss/news">
+		</head>
+		
+<!-- ########## MAIN STRUCTURE ######### -->
+<!--[if lt IE 7]><body class="ie6 threeCol"><![endif]-->
+<!--[if IE 7]><body class="ie7 threeCol"><![endif]-->
+<!--[if IE 8]><body class="ie8 threeCol"><![endif]-->
+<!--[if IE 9]><body class="ie9 threeCol"><![endif]-->
+<!--[if !IE]>--><body><!--<![endif]-->
+	<div id="wrapper">
+		<div id="mobile_name">Northampton Borough Council</div>
+		<div id="mast" class="red box-shadow">
+			<span class="h1">
+				<a href="#mast"><span>Northampton Borough Council</span></a>
+			</span>
+			<ul id="mast-nav">
+				<li class="font-size"><a href="http://www.northampton.gov.uk/accessibility/settings"><span>Accessibility</span></a></li>
+				<li><a href="http://www.northampton.gov.uk/languages">Other languages</a></li>
+				<li><a href="http://www.northampton.gov.uk/disclaimer">Disclaimer</a></li>
+				<li class="last"><a href="http://www.northampton.gov.uk/contact">Contact us</a></li>
+			</ul>
+			<ul id="skip" class="hidden">
+				<li><a href="http://www.northampton.gov.uk/#content" rel="nofollow">Skip to content</a></li>
+				<li><a href="http://www.northampton.gov.uk/#column_nav" rel="nofollow">Skip to main navigation</a></li>
+			</ul>
+	
+			<form action="http://www.northampton.gov.uk/improve_search" method="get" id="search">
+				<p><label for="search-site-query">Search for it...</label></p>
+				<div>
+					<input type="hidden" name="pckid" value="1610317951">
+					<input type="hidden" name="aid" value="471434">
+				</div>
+				<div id="search-site">
+					<input id="search-site-query" type="text" size="18" maxlength="255" name="sw" class="field" value="">
+					<input id="search-site-submit" type="submit" class="button" value=" ">
+				</div>
+			</form>
+	
+			<div class="clear"></div>
+		</div>
+		<ul id="main-nav-top" class="grey box-shadow">
+			<li class="home"><a class="show_hide" href="http://www.northampton.gov.uk"><span>Home</span></a></li>
+			<li class="apply"><a class="show_hide" href="http://www.northampton.gov.uk/apply" style=""><span>Apply for it</span></a></li>
+			<li class="pay"><a class="show_hide" href="http://www.northampton.gov.uk/pay" style=""><span>Pay for it</span></a></li>
+			<li class="report"><a class="show_hide" href="http://www.northampton.gov.uk/report" style=""><span>Report it</span></a></li>
+			<li class="feedback"><a class="show_hide" href="http://www.northampton.gov.uk/feedback" style=""><span>Feedback</span></a></li>
+		</ul>
+		<div class="clear"></div>
+		<div id="main" class="box-shadow">
+			<div id="content" class="full">
+			<!-- ################ MAIN CONTENT START ############ -->
+
+
+			<div class="app">
+				<div id="sidebar" class="app__sidebar">
+					<div class="controls__search" id="addressSearch">
+					</div>
+					<div id="layers-control" class="controls__layers">
+      					<div class="layers-control"></div>
+      				</div><!-- /.controls__layers -->
+      				<div class="controls__features">
+        				<ul id="features" class="features"></ul>
+      				</div><!-- /.controls__features -->
+      				<div class="action"></div>
+				</div>
+				<div class="app__main">
+					<div id="map-wrapper"></div>
+					<div class="controls__tools">
+						<ul id="tools" class="nav maptools"></ul>
+						<div id="distance" class="stat-group"></div>
+					</div><!-- /.controls__tools -->
+				</div>
+				<div id="pro" class="text--right"></div>
+			</div>
+			
+    
     <!-- layer filter -->
     <!--<form id="filter">
       <label>Filter</label>
@@ -19,19 +117,6 @@
     </form>
     <a href="#" id="clear-filter">Clear Filter</a>-->
     <!-- /layer filter -->
-
-    <div class="grid">
-      <div class="grid__item one-third controls__layers">
-        <h3>Select Layers</h3>
-        <ul id="layers-control" class="nav nav--stacked"></ul>
-        <button id="clearLayers" class="btn btn--full">Clear Layers</button>
-      </div><!-- /.controls__layers --><div class="grid__item one-third controls__tools">
-        <ul id="tools" class="nav nav--stacked"></ul>
-        <div id="distance" class="stat-group"></div>
-      </div><!-- /.controls__tools --><div class="grid__item one-third controls__features">
-        <ul id="features"></ul>
-      </div><!-- /.controls__features -->
-    </div><!-- /.grid -->
 
     
 
@@ -49,7 +134,7 @@
           <span id="progress-bar"><%= current %> / <%= total %> loaded.</span>
     </script>
     <script id="measuringToolTemplate" type="text/template">
-          <button class="btn btn--full btn--positive <% if(active) { %>btn--negative<% } %>"><% if(active) { %><%= activeName %><% } else { %><%= name %><% } %></button>
+          <button class="btn--maptool <% if(active) { %>is-active<% } %>"><%= name %></button>
     </script>
     <script id="statTemplate" type="text/template">
           <dl class="stat">
@@ -58,13 +143,30 @@
           </dl>
     </script>
     <script id="featureTemplate" type="text/template">
-          <ul><%for (prop in feature.model.attributes) { %>
-              <li><%= prop %>: <%= feature.model.attributes[prop] %></li>
+          <table class="features--table">
+          	<tbody>
+          	<%for (prop in feature.model.attributes) { %>
+              <tr>
+              	<td><%= prop %></td>
+              	<td><%= feature.model.attributes[prop] %></td>
+              </tr>
             <% } %>
-            </ul>
+            </tbody>
+          </table>
     </script>
     <script id="layerGroupTemplate" type="text/template">
-          <span></span>
+          <h3 class="layers-control__group__title js-accordion-title"><%= title %></h3>
+          <div class="js-accordion-content"></div>
+    </script>
+    <script id="addressSearchTemplate" type="text/template">
+    	<form id="" class="address-search">
+          <label class="h3 visuallyhidden">Address Search</label>
+          <input type="text" name="address" placeholder="Search an address" value="<%= value %>" class="js__address-search-input">
+          <input type="submit" value="Search">
+          </form>
+          <% if(results.length > 0) { %>
+          <%= results[0].formatted_address %>
+          <% } %>
     </script>
     
     <!-- /templates -->
@@ -94,6 +196,35 @@
     <script src="js/views/StatisticView.js"></script>
     <script src="js/app.js"></script>
     -->
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOaErr6T19HFRywILKuE4SrIxJaNEXA5M&sensor=false"></script>
     <script src="js/build/app.min.js"></script>
-  </body>
-</html>
+
+			<!-- ################ MAIN CONTENT END ############ -->
+				<div class="contact">
+					<h4><a href="http://www.northampton.gov.uk/contactthecouncil">Contact the Council</a>
+					</h4>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="ieFix"></div>
+		<div class="clear"></div>
+		<div id="footer" class="box-shadow">
+			<ul id="smallprint">
+				<li>© 2013 Northampton Borough Council </li>
+			</ul>
+			<div id="social">
+				<h4>Follow us on…</h4>
+				<ul id="networks">
+					<li><a href="http://www.northampton.gov.uk/app"><img src="http://www.northampton.gov.uk/site/images/social-app-store.png" alt="Available on the App Store" title="iPhone App"> </a></li>
+					<li><a href="http://www.northampton.gov.uk/facebook"><img height="32" width="32" src="http://www.northampton.gov.uk/site/styles/css_img/social-facebook.png" alt="Facebook" title="Facebook"> <span>Facebook</span></a></li>
+					<li><a href="http://www.northampton.gov.uk/twitter"><img height="32" width="32" src="http://www.northampton.gov.uk/site/styles/css_img/social-twitter.png" alt="Twitter" title="Twitter"> <span>Twitter</span></a></li>
+					<li><a href="http://www.northampton.gov.uk/youtube"><img height="32" width="32" src="http://www.northampton.gov.uk/site/styles/css_img/social-youtube.png" alt="YouTube" title="YouTube"> <span>YouTube</span></a></li>
+					<li><a href="http://www.northampton.gov.uk/rss"><img height="32" width="32" src="http://www.northampton.gov.uk/site/styles/css_img/social-rss.png" alt="RSS" title="RSS"> <span>RSS</span></a></li>
+				</ul>
+			</div>
+			<div class="clear"></div>
+		</div>
+	
+</div></body></html>

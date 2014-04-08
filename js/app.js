@@ -1,16 +1,17 @@
 var app = app || {};
 
+
 $(function() {
 
     var data = {
-        "wmsService": "http://localhost:8080/geoserver/NBC/gwc/service/wms",
+        "wmsService": "http://localhost:8080/geoserver/wms",
         "tileFormat": "image/png",
         "map": {
             "bounds": {
-                "left": 400000,
-                "bottom": 250000,
-                "right": 480000,
-                "top": 300000
+                "left": 400000.0,
+                "bottom": 200000.0,
+                "right": 500000.0,
+                "top": 300000.0
             },
             "center": {
                 "x": 475579,
@@ -20,7 +21,7 @@ $(function() {
             "maxResolution": 390.625,
             "projection": "EPSG:27700",
             "units": "m",
-        },
+        }/*,
         "layers": {
             "base": [{
                     "title": "SP",
@@ -37,34 +38,14 @@ $(function() {
                         "displayOutsideMaxExtent": true,
                         "isBaseLayer": true,
                         "yx": {
-                            "EPSG:27700": false
+                            "EPSG:27700": true
                         }
                     }
 
                 }
-                /*, {
-                "title": "Vector District",
-                "name": "OSVectorDistrict",
-                "type": "WMS",
-                "params": {
-                    "LAYERS": "OSVectorDistrict",
-                    "STYLES": "",
-                    "format": "image/png",
-                    "transparent": true
-                },
-                "options": {
-                    "singleTile": false,
-                    "ratio": 1,
-                    "isBaseLayer": true,
-                    "maxResolution": 6.103515626,
-                    "yx": {
-                        "EPSG:27700": false
-                    }
-                }
-            }*/
             ],
             "overlays": [{
-                "title": "First Set",
+                "title": "Bereavement Services",
                 "layers": [{
                     "title": "Enterprise Zones",
                     "name": "EnterpriseZoneSites",
@@ -89,7 +70,6 @@ $(function() {
                     },
                     "options": {
                         "displayInLayerSwitcher": false,
-                        /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, 0.5, 0.25],*/
                         "extractAttributes": true,
                         "isBaseLayer": false,
                         "protocolType": "WFS",
@@ -177,7 +157,7 @@ $(function() {
                     }
                 }]
             },{
-                "title": "Second Set",
+                "title": "Community Info",
                 "layers": [{
                     "title": "Enterprise Zones 2",
                     "name": "EnterpriseZoneSites",
@@ -202,7 +182,123 @@ $(function() {
                     },
                     "options": {
                         "displayInLayerSwitcher": false,
-                        /*"resolutions": [100, 50, 10, 5, 2.5, 1.25, 0.5, 0.25],*/
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "EnterpriseZoneSites",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
+                }]
+            },{
+                "title": "Council Service Locations",
+                "layers": [{
+                    "title": "Enterprise Zones 2",
+                    "name": "EnterpriseZoneSites",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#ff00ff",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#ff9933",
+                            "fillOpacity": 0.75,
+                            "strokeWidth": 3
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "EnterpriseZoneSites",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
+                }]
+            },{
+                "title": "Environmental Health",
+                "layers": [{
+                    "title": "Enterprise Zones 2",
+                    "name": "EnterpriseZoneSites",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#ff00ff",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#ff9933",
+                            "fillOpacity": 0.75,
+                            "strokeWidth": 3
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
+                        "extractAttributes": true,
+                        "isBaseLayer": false,
+                        "protocolType": "WFS",
+                        "protocolOptions": {
+                            "featureType": "EnterpriseZoneSites",
+                            "url": "http://localhost:8080/geoserver/wfs",
+                            "geometryName": "the_geom",
+                            "featurePrefix": "WebMapping",
+                            "srsName": "EPSG:27700",
+                            "version": "1.1.0"
+                        }
+                    }
+                }]
+            },{
+                "title": "Health &amp; Emergency Services",
+                "layers": [{
+                    "title": "Enterprise Zones 2",
+                    "name": "EnterpriseZoneSites",
+                    "type": "Vector",
+                    "styles": {
+                        "default": {
+                            "strokeColor": "#FFFFFF",
+                            "fillColor": "#ff00ff",
+                            "fillOpacity": 0.50,
+                            "strokeWidth": 0,
+                            "graphicZIndex": 3
+                        },
+                        "rendererOptions": {
+                            "yOrdering": true
+                        },
+                        "select": {
+                            "strokeColor": "#000000",
+                            "fillColor": "#ff9933",
+                            "fillOpacity": 0.75,
+                            "strokeWidth": 3
+                        }
+                    },
+                    "options": {
+                        "displayInLayerSwitcher": false,
                         "extractAttributes": true,
                         "isBaseLayer": false,
                         "protocolType": "WFS",
@@ -217,7 +313,7 @@ $(function() {
                     }
                 }]
             }] //layergroup
-        } //layers
+        }*/ //layers
     }; // data 
 
     window.nbcMapApp = new app.View.MapView(data);

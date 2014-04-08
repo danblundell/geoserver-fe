@@ -8,7 +8,6 @@ app.View.FeatureCollectionView = Backbone.View.extend({
         this.collection = new app.Collection.FeatureCollection();
 
         //request the features from the server
-        //request the features from the server
         OpenLayers.Request.GET({
             url: "http://localhost:8080/geoserver/NBC/wms",
             params: request.params,

@@ -7,7 +7,8 @@ app.View.MapView = Backbone.View.extend({
     template: $("#mapTemplate").html(),
 
     events: {
-        "click #clearLayers": "clearLayers"
+        "click #clearLayers": "clearLayers",
+        "click .action": "toggleSidebar"
     },
 
     initialize: function(config, mapEl) {
@@ -37,55 +38,28 @@ app.View.MapView = Backbone.View.extend({
         // cache a reference to the map object to save lookups
         this._map = this.model.get("openLayerMap");
 
-        // create the base layers
-        this.model.set("baseLayers", new app.View.LayerCollectionView(config.layers.base, config.wmsService));
+        // go and get base layers from Geoserver
+        this.getLayersFromService(config.wmsService, this.getBaseLayersFromService, this);
 
-        // create the overlay layers
-        this.model.set("overlays", new app.View.LayerGroupCollectionView(config.layers.overlays, config.wmsService));
+        // go and get overlays from Geoserver
+        this.getLayersFromService(config.wmsService, this.getOverlaysFromService, this);
+        
+        
+        //this.model.set("sidebar", new app.View.SidebarView(this.model.get("openLayerMap")));
 
         // create some measuring controls and attach them to the map
         this.model.set("measuringControls", new app.View.MeasuringToolCollectionView(this._map));
 
-        // attach the layers to the open layers map object
-        this.addLayers();
 
         // add some controls to the map
         this.addControls();
         
         // event listener for this._map clicks
         this._map.events.register("click", this, this.getFeatures);
-        //this._map.events.register("zoomend", this, this.handleZoom);
-
-        // event listener for layer changes
-        //this.listenTo(this.model.get("overlays"), "change:visibility", this.toggleLayerVisibility);
+        this._map.events.register("zoomend", this, this.handleZoom);
 
         //render the map to the DOM
         this.render();
-        this.centerMap('475579', '260488', 4);
-    },
-
-    addControls: function() {
-        if(this._map) {
-            this._map.addControl(
-            new OpenLayers.Control.PanZoomBar({
-                position: new OpenLayers.Pixel(10, 10)
-            })
-        );
-
-        this._map.addControl(
-            new OpenLayers.Control.Navigation({
-                dragPanOptions: {
-                    enableKinetic: true
-                }
-            })
-        );
-
-        this._map.addControl(
-            new OpenLayers.Control.MousePosition()
-        );    
-
-        }
-        
     },
 
     render: function() {
@@ -101,6 +75,29 @@ app.View.MapView = Backbone.View.extend({
         return this;
     },
 
+    /**
+     * Adds the navigation controls for
+     * interacting with the map.
+     * Reference: OpenLayers.js
+     */
+    addControls: function() {
+        if(this._map) {
+            this._map.addControls([
+                new OpenLayers.Control.PanZoomBar({
+                    position: new OpenLayers.Pixel(10, 10)
+                }),
+                new OpenLayers.Control.Navigation(),
+                new OpenLayers.Control.MousePosition(),
+                new OpenLayers.Control.ZoomBox({
+                    alwaysZoom: true
+                })
+            ]);
+        }
+
+        this.model.set("addressSearch", new app.View.AddressSearchView());
+        
+    },
+
     centerMap: function(x, y, zoom) {
         this.model.get("openLayerMap").setCenter(new OpenLayers.LonLat(x, y), zoom);
     },
@@ -108,17 +105,9 @@ app.View.MapView = Backbone.View.extend({
     addLayers: function() {
         // cache the map model to save lookups
         var map = this.model.get("openLayerMap");
-
-        // get base layer objects from the collection
-        var layers = this.model.get("baseLayers").collection.models.map(function(model) {
-            return model.get('openLayer');
-        });
-
-        // go get the overlays from the group collection view
-        var overlays = this.getOpenLayers(this.getAllOverlays());
-
-        map.addLayers(layers);
-        map.addLayers(overlays);
+        var toAdd = this.getOpenLayers(this.getAllOverlays());
+        map.addLayers(toAdd);
+        this.render();
     },
 
 
@@ -222,9 +211,96 @@ app.View.MapView = Backbone.View.extend({
         });
     },
 
-    handleZoom: function(e) {
-        this.model.get("overlays").toggleLayers();
-    }
+    /**
+     * Adds the overlays to the map
+     * @param  {Array} layers      [an array of layer objects]
+     * @param  {String} serviceUrl [the WMS service url]
+     * @return {void}
+     */
+    getOverlaysFromService: function(layers, serviceUrl, context) {
+        var overlayGroups = [{title: "Layer Group Title", isBaseGroup: false}];
 
+        overlayGroups[0].layers = _.filter(layers, function(layer){
+            layer.isBaseLayer = false;
+            return layer.prefix === "NBC";
+        });
+
+        // create the overlay layers
+        context.model.set("overlays", new app.View.LayerGroupCollectionView(overlayGroups, serviceUrl));
+        context.addLayers();
+    },
+
+    getBaseLayersFromService: function(layers, serviceUrl, context) {
+        var baseGroup = [];
+
+        baseGroup = _.filter(layers, function(layer){
+            layer.isBaseLayer = true;
+            layer.type = "WMS";
+            layer.service = serviceUrl;
+            return layer.prefix === "Base";
+        });
+
+        var baseLayers = [];
+
+        _.each(baseGroup, function(layer){
+            var layerModel = new app.Model.Layer(layer);
+            baseLayers.push(layerModel.get("openLayer"));
+            
+        });
+            
+        context._map.addLayers(baseLayers);
+        context.render();
+        context.centerMap('475579', '260488', 4);
+    },
+
+    /**
+     * Gets all the available layers using the WMS web service
+     * within Geoserver.
+     * 
+     * @param  {String}   serviceUrl [the base url to the wms service]
+     * @param  {Function} callback   [the method to call once ajax has completed]
+     * @return {Array}               [an array of layers from the WMS service]
+     */
+    getLayersFromService: function(serviceUrl, callback, context) {
+        
+        OpenLayers.Request.GET({
+            url: serviceUrl + '?request=getCapabilities', 
+            success: function(req) {
+                var format=new OpenLayers.Format.WMSCapabilities(),
+                    doc = format.read(req.responseXML);
+                
+                callback(doc.capability.layers, serviceUrl, context);
+            }
+        });
+    },
+
+    handleZoom: function(e) {
+        console.log("RESOLUTION: "+this._map.getResolution());
+        console.log("ZOOM: "+this._map.getZoom());
+        console.log("PROJECTION: "+this._map.getProjection());
+        console.log("SCALE: "+this._map.getScale());
+        //this.model.get("overlays").toggleLayers();
+    },
+
+    toggleSidebar: function(e) {
+        e.preventDefault();
+
+        var $sidebar = this.$el.find(".app__sidebar");
+
+        if($sidebar.hasClass("active")) {
+            $sidebar.removeClass("active");
+        } else {
+            $sidebar.addClass("active");
+        }
+    },
+
+    clearLayers: function(e) {
+        e.preventDefault();
+
+        var overlays = this.getAllOverlays();
+        _.each(overlays, function(layerModel){
+            layerModel.set("visibility", false);
+        });
+    }
 
 });

@@ -44,8 +44,6 @@ app.View.LayerView = Backbone.View.extend({
     },
 
     layerLoading: function(e) {
-        console.log("layer loading");
-
         this.model.trigger('layer:loading');
     },
 

@@ -1,0 +1,38 @@
+form.address-search {
+
+	border: 1px solid $ltsilver;
+	padding: $half-spacing-unit/4 $half-spacing-unit/2;
+	position: relative;
+
+	margin-bottom: $half-spacing-unit;
+	
+	@include vendor(border-radius, 4px);
+
+	input {
+		margin-top: 0;
+		padding: 0;
+	}
+	input[type="text"] {
+		border: 0;
+		padding: 0;
+	}
+	
+	input[type="submit"] {
+		
+		background-image: url(../img/search.png);
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: contain;
+
+		position: absolute;
+		top: 0;
+		right: 0;
+		text-indent: -9999em;
+		
+		height: 100%; 
+		padding: 0;
+		width: $base-spacing-unit;
+
+		@include vendor(border-radius, 0);
+	}
+}

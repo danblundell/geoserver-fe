@@ -2,7 +2,20 @@
 	margin-bottom: $base-spacing-unit;
 }
 
-	.layers-control__group__title {
+	h3.layers-control__group__title {
+		cursor: pointer;
+		
+		margin-bottom: 0 !important;
+		margin-top: 0 !important;
+
+		padding: 0;
+
+		@include font-size(12px);
+		
+
+	}
+
+	.layers-control__group {
 		background-color: $ltsilver;
 		background: -moz-linear-gradient(top,  #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6+ */
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(50%,#dbdbdb), color-stop(51%,#d1d1d1), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
@@ -13,28 +26,24 @@
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-8 */
 
 		border: 1px solid $silver;
-
-		cursor: pointer;
 		
-		margin-bottom: 0 !important;
-		margin-top: 0 !important;
+		padding: $half-spacing-unit/2 $half-spacing-unit;
 
-		padding-bottom: $half-spacing-unit/2;
-		padding-left: $half-spacing-unit;
-		padding-right: $half-spacing-unit;
-		padding-top: $half-spacing-unit/2;
-
-		@include font-size($h4-size);
 		@include vendor(border-radius, 4px);
-	}
-
-	.layers-control__group {
-		
-		> div {
-			padding: 0 $half-spacing-unit;
-		}
 
 		ul {
 			margin: 0;
+			font-style: italic;
+
+			@include font-size(12px);
+
+			> li {
+				line-height: 1;
+				margin: .15em 0;
+			}
 		}	
+	}
+
+	.active.layers-control__group {
+		background: #ffffff;
 	}

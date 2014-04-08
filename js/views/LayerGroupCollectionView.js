@@ -1,6 +1,7 @@
 var app = app || {};
 
 app.View.LayerGroupCollectionView = Backbone.View.extend({
+    className: ".layerGroup",
     el: "#layers-control",
 
     events: {
@@ -22,19 +23,20 @@ app.View.LayerGroupCollectionView = Backbone.View.extend({
         var totalLayers = 0;
 
         // for each layer group model
-        this.collection.each(function(layerGroup){
-           totalLayers += layerGroup.get("layers").length;
-        },this);
+        // this.collection.each(function(layerGroup){
+        //    totalLayers += layerGroup.layers.length;
+        // },this);
 
         //set up a progress bar to show the layer loading progress
-        this.progress = new app.View.ProgressBar({
-            current: 0,
-            total: totalLayers
-        });
+        // this.progress = new app.View.ProgressBar({
+        //     current: 0,
+        //     total: totalLayers
+        // });
 
         // listens to the event chain through the collections
         this.listenTo(this.collection, "layer:loaded", this.updateProgress);
 
+        
         this.render();
     },
 
@@ -65,23 +67,23 @@ app.View.LayerGroupCollectionView = Backbone.View.extend({
     },
 
     updateProgress: function() {
-        console.log("updating progress");
         // count the number of loaded layers
         var loaded = _.filter(this.getLayers(), function(layer){
             return layer.get("loaded");
         });
 
-        console.log(loaded);
-
         // update the progress model
-        this.progress.model.set("current", loaded.length);
+        //this.progress.model.set("current", loaded.length);
     },
 
     accordionize: function(e) {
-        
+        e.preventDefault();
+        console.log("clicked accordion title");
         if(!this.$el.find(e.target).parent().hasClass("active")) {
             this.$el.find(".js-accordion-title").parent().removeClass("active");
             this.$el.find(e.target).parent().addClass("active");    
+        } else {
+            this.$el.find(".js-accordion-title").parent().removeClass("active");
         }
         
     } 
