@@ -39,7 +39,14 @@
 
 			> li {
 				line-height: 1;
-				margin: .15em 0;
+				padding: .5em 0;
+				border-bottom: 1px solid transparent;
+				border-top: 1px solid transparent;
+				&:hover {
+					border-bottom:1px solid $ltsilver;
+					border-top:1px solid $ltsilver;
+
+				}
 			}
 		}	
 	}

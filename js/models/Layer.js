@@ -63,12 +63,7 @@ app.Model.Layer = Backbone.Model.extend({
 
             // add the style to the configured attributes
             ol.options.styleMap = style;
-
-            console.log("Vector Layer");
-            console.log(layer.name);
-            console.log(layer.title);
-            console.log(ol);
-            console.log(ol.title);
+            
             // create the vector protocol object
             var protocol = new OpenLayers.Protocol.WFS({
                             "featureType": layer.title,

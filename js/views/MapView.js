@@ -218,11 +218,34 @@ app.View.MapView = Backbone.View.extend({
      * @return {void}
      */
     getOverlaysFromService: function(layers, serviceUrl, context) {
-        var overlayGroups = [{title: "Layer Group Title", isBaseGroup: false}];
+        var overlayGroups = [];
 
-        overlayGroups[0].layers = _.filter(layers, function(layer){
+        // filter get only the layers that are overlays
+        var overlays = _.filter(layers, function(layer){
             layer.isBaseLayer = false;
             return layer.prefix === "NBC";
+        });
+
+        // get a unique list of possible layer categories
+        var categories = _.uniq(_.map(overlays, function(layer){
+            return layer.keywords[0].value;
+        }));
+
+        // create a layer group per category and add the layers to the group
+        _.each(categories, function(cat){
+            
+            var layerGroup = {
+                title: cat,
+                layers: []
+            };
+
+            _.each(overlays,function(layer){
+                if(layer.keywords[0].value === layerGroup.title) {
+                    layerGroup.layers.push(layer);
+                }
+            });
+
+            overlayGroups.push(layerGroup);
         });
 
         // create the overlay layers
