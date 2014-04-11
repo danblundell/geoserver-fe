@@ -17,6 +17,7 @@ app.View.LayerView = Backbone.View.extend({
         layer.events.register("loadend", this, this.layerLoaded);
 
         this.on("change:visibility", this, this.render);
+        this.on("change:legend", this, this.render);
 
         this.render();
     },
@@ -24,7 +25,6 @@ app.View.LayerView = Backbone.View.extend({
     render: function() {
         //parse the template
         var templ = _.template(this.template);
-
         // set this elements html to the model rendered in the template
         this.$el.html(templ(this.model.toJSON()));
         return this;

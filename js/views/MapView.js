@@ -289,10 +289,23 @@ app.View.MapView = Backbone.View.extend({
         OpenLayers.Request.GET({
             url: serviceUrl + '?request=getCapabilities', 
             success: function(req) {
-                var format=new OpenLayers.Format.WMSCapabilities(),
+                console.log("success");
+                console.log(req);
+                if(req.status === 200) {
+
+                    var format=new OpenLayers.Format.WMSCapabilities(),
                     doc = format.read(req.responseXML);
+                    callback(doc.capability.layers, serviceUrl, context);    
+                    
+                } else {
+                    context.$el.find('.fetching').addClass("fail")
+                        .find(".fetching__message").html("Looks like there something's broken, get notified when we're back up and running");
+                }
                 
-                callback(doc.capability.layers, serviceUrl, context);
+            },
+            failure: function(fail) {
+                console.log("fail");
+                console.log(fail);
             }
         });
     },

@@ -1,0 +1,14 @@
+.stat--distance {
+	@extend .stat;
+
+	text-align: center;
+
+
+	.stat__value {
+		font-size: 5.13em;
+	}
+
+	.stat__title {
+		text-transform: uppercase;
+	}
+}

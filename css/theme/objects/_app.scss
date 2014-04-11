@@ -44,10 +44,32 @@
 	}
 
 	.app__main {
+		
 		float: left;
 		position: relative;
 		width: 100%;
-		background-image: url(../img/loading.gif);
-		background-position: center center;
-		background-repeat: no-repeat;
+
+		.fetching {
+			background-image: url(../img/loading.gif);
+			background-position: center center;
+			background-repeat: no-repeat;
+			height: 100%;
+			position: absolute;
+			width: 100%;
+
+			&.fail {
+				background-image: none;
+			}
+
+			.fetching__message {
+				color: $silver;
+				height: 100%;
+				font-style: italic;
+				position: absolute;
+				text-align: center;
+				top: 55%;
+				width: 100%;
+			}
+		}
+		
 	}

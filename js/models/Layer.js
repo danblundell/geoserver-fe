@@ -10,7 +10,8 @@ app.Model.Layer = Backbone.Model.extend({
         showControl: true,
         visibility: false,
         loaded: false,
-        enabled: false
+        enabled: false,
+        legend: false
     },
 
     initialize: function(layer) {
@@ -63,7 +64,7 @@ app.Model.Layer = Backbone.Model.extend({
 
             // add the style to the configured attributes
             ol.options.styleMap = style;
-            
+
             // create the vector protocol object
             var protocol = new OpenLayers.Protocol.WFS({
                             "featureType": layer.title,
@@ -101,7 +102,7 @@ app.Model.Layer = Backbone.Model.extend({
                     self.sld = format.read(req.responseText || req.responseXML);
                     var style = self.sld.namedLayers[layer.title].userStyles[0];
                     self.get("openLayer").styleMap.styles["default"] = style;
-                    
+                    self.setLegend();
                 }
             });
         }
@@ -124,13 +125,81 @@ app.Model.Layer = Backbone.Model.extend({
         this.set("enabled", true);
     },
 
-    getSld: function(sldUrl) {
-        var self = this;
+    colorLuminance: function(hex, opacity) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
         
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        
+        opacity = opacity || 1;
+
+        // convert to decimal and construct rgba value
+        var rgba = "rgba(", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            rgba += (c + ",");
+        }
+        
+        // add alpha value
+        rgba += (opacity + ");");
+
+        return rgba;
     },
 
-    processSld: function(req) {
-        
+    setLegend: function() {
+        var self = this,
+            layerStyle = this.get("openLayer").styleMap.styles["default"],
+            rules = layerStyle.rules,
+            legend = [];
+
+        _.each(rules,function(rule) {
+            
+            var legendItem = {
+                name: rule.filter ? rule.filter.value : "default",
+                properties: []
+            };
+
+            var ruleStyles = rule.symbolizer;
+
+            for (var style in ruleStyles) {
+
+                var styleObj = ruleStyles[style];
+
+                for(var prop in styleObj) {
+
+                    switch (prop) {
+                        case "fillColor":
+                            legendItem.properties.push("background-color:" + styleObj[prop] + ";");
+                        break;
+                        case "fillOpacity":
+                            if(styleObj.fillColor) {
+                                var bgColour = self.colorLuminance(styleObj.fillColor, styleObj[prop]);
+                                legendItem.properties.push("background-color:" + bgColour + ";");
+                            }
+                        break;
+                        case "strokeColor":
+                            legendItem.properties.push("border-color:" + styleObj[prop] + ";");
+                        break;
+                        case "strokeWidth":
+                            legendItem.properties.push("border-width:" + styleObj[prop] + "px;");
+                        break;
+                        case "strokeDashstyle":
+                            legendItem.properties.push("border-style: dashed;");
+                        break;
+                    }  
+
+                }
+
+                legendItem.css = legendItem.properties.join(" ");
+            }
+
+            legend.push(legendItem);
+
+        });
+        this.set("legend", legend);
     }
 
 });

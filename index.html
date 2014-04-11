@@ -100,6 +100,9 @@
       				<div class="action"></div>
 				</div>
 				<div class="app__main">
+					<div class="fetching">
+						<p class="fetching__message">We're just loading the map for you, hold on tight</p>
+					</div>
 					<div id="map-wrapper"></div>
 					<div class="controls__tools">
 						<ul id="tools" class="nav maptools"></ul>
@@ -123,6 +126,11 @@
     <!-- templates -->
     <script id="layerTemplate" type="text/template">
           <label for="<%= name %>" <% if(!loaded || !enabled) { %> class="disabled"  disabled <% } %>>
+          <% if(legend) { %>
+          	<% for(key in legend) { %>
+          <div class="layer-toggle__key" style="<%= legend[key].css %>"></div>
+          	<% } %>
+          <% } %>
           <input type="checkbox" name="<%= name %>" class="layer-toggle" <% if(visibility) { %> checked<% } %> <% if(!loaded || !enabled) { %> disabled<% } %>/>
           <%= title %> <% if(!enabled) {%><span class="">(zoom in to enable this layer)</span><% } %>
           </label>
@@ -137,7 +145,7 @@
           <button class="btn--maptool <% if(active) { %>is-active<% } %>"><%= name %></button>
     </script>
     <script id="statTemplate" type="text/template">
-          <dl class="stat">
+          <dl class="stat--distance">
             <dt class="stat__title"><%= title %></dt>
             <dd class="stat__value"><%= value %><%= unit %><% if(sup) {%><sup><%= sup %></sup><% } %></dd>
           </dl>
