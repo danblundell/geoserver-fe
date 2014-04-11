@@ -17,7 +17,7 @@ app.View.LayerView = Backbone.View.extend({
         layer.events.register("loadend", this, this.layerLoaded);
 
         this.on("change:visibility", this, this.render);
-        this.on("change:legend", this, this.render);
+        this.listenTo(this.model, "change:legend", this.render);
 
         this.render();
     },

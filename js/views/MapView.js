@@ -8,7 +8,7 @@ app.View.MapView = Backbone.View.extend({
 
     events: {
         "click #clearLayers": "clearLayers",
-        "click .action": "toggleSidebar"
+        "click .js-sidebar__toggle": "toggleSidebar"
     },
 
     initialize: function(config, mapEl) {
@@ -57,6 +57,9 @@ app.View.MapView = Backbone.View.extend({
         // event listener for this._map clicks
         this._map.events.register("click", this, this.getFeatures);
         this._map.events.register("zoomend", this, this.handleZoom);
+
+        // get a reference to the sidebar
+        this.$sidebar = this.$el.find(".app__sidebar__content");
 
         //render the map to the DOM
         this.render();
@@ -129,6 +132,11 @@ app.View.MapView = Backbone.View.extend({
      * @return {Void}
      */
     getFeatures: function(e) {
+
+        this.hideSidebar();
+        
+        this._map.panTo(this._map.getLonLatFromPixel(e.xy));
+
 
         var visibleLayers = this.getVisibleOverlays();
 
@@ -321,13 +329,19 @@ app.View.MapView = Backbone.View.extend({
     toggleSidebar: function(e) {
         e.preventDefault();
 
-        var $sidebar = this.$el.find(".app__sidebar");
-
-        if($sidebar.hasClass("active")) {
-            $sidebar.removeClass("active");
+        if(this.$sidebar.hasClass("active")) {
+            this.hideSidebar();
         } else {
-            $sidebar.addClass("active");
+            this.showSidebar();
         }
+    },
+
+    showSidebar: function() {
+       this.$sidebar.addClass("active");
+    },
+
+    hideSidebar: function() {
+       this.$sidebar.removeClass("active");
     },
 
     clearLayers: function(e) {

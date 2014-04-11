@@ -4,50 +4,55 @@
 	width: 100%;
 }
 	.app__sidebar {
-		background: #ffffff;
-		border-right: 1px solid $ltsilver;
-		height: 100%;
-		left: -25%;
-		padding: $half-spacing-unit $half-spacing-unit/2 0 0;
+		background: transparent;
+		left: 0;
+		padding: $half-spacing-unit $half-spacing-unit/2;
 		position: absolute;
 		top: 0;
-		width: 25%;
+		height: 100%;
+		width: 33%;
 		z-index: 9999;
-
-		@include vendor(transition, left .2s ease-in);
-
-		.action {
-			background-color: #ffffff;
-			background-image: url('../img/drawer.png');
-			background-position: $half-spacing-unit*.75 center;
-			background-repeat: no-repeat;
-			border-right: 1px solid $ltsilver;
-			border-left: 0;
-			cursor: pointer;
-			height: $base-spacing-unit*1.5;
-			position: absolute;
-			right: $half-spacing-unit*-1.5;
-			top: 45%;
-			width: $base-spacing-unit*1.5;
-
-			@include vendor(border-radius, 50%);
-		}
-
 		&.active {
-			left: 0;	
-
-			.action {
-				background-image: url('../img/drawer--close.png');
-				background-position: center center;
-			}
+			left: 0;
 		}
 	}
+
+		.app__sidebar__content {
+			position: relative;
+			top: 100%;
+			background: #ffffff;
+			padding: $half-spacing-unit $half-spacing-unit/2;
+			overflow: hidden;
+			opacity: 0;
+			@include vendor(transition-property, opacity, top);
+			@include vendor(transition-duration, .2s, 0);
+			@include vendor(transition-delay, 0, .3s);
+			@include vendor(transition-timing-function, ease-in-out);
+
+			&.active {
+				opacity: 1;
+				top: 0;
+				@include vendor(transition-duration, .2s, 0);
+				@include vendor(transition-delay, 0, 0);
+			}
+		}
+
+		.app__sidebar__toggle {
+			background: red;
+			display: block;
+			position: absolute;
+			bottom: 0;
+			height: $base-spacing-unit;
+			width: $base-spacing-unit;
+		}
 
 	.app__main {
 		
 		float: left;
+		overflow: hidden;
 		position: relative;
 		width: 100%;
+
 
 		.fetching {
 			background-image: url(../img/loading.gif);

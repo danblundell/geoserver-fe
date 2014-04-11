@@ -65,9 +65,12 @@ app.Model.Layer = Backbone.Model.extend({
             // add the style to the configured attributes
             ol.options.styleMap = style;
 
+            // remove the spaces from the layer title
+            var layerTitle = this.trim(layer.title);
+
             // create the vector protocol object
             var protocol = new OpenLayers.Protocol.WFS({
-                            "featureType": layer.title,
+                            "featureType": layerTitle,
                             "url": "http://localhost:8080/geoserver/wfs",
                             "geometryName": "the_geom",
                             "featurePrefix": "WebMapping",
@@ -93,7 +96,7 @@ app.Model.Layer = Backbone.Model.extend({
 
             this.set("openLayer", lay);
 
-            var sldUrl = "http://localhost:8080/geoserver/styles/"+layer.title+".sld";
+            var sldUrl = "http://localhost:8080/geoserver/styles/"+layerTitle+".sld";
 
             OpenLayers.Request.GET({
                 url: sldUrl,
@@ -142,7 +145,7 @@ app.Model.Layer = Backbone.Model.extend({
             c = parseInt(hex.substr(i*2,2), 16);
             rgba += (c + ",");
         }
-        
+
         // add alpha value
         rgba += (opacity + ");");
 
@@ -200,6 +203,11 @@ app.Model.Layer = Backbone.Model.extend({
 
         });
         this.set("legend", legend);
+    },
+
+    trim: function(str) {
+        str = str.replace(/\s+/g, "");
+        return str;
     }
 
 });

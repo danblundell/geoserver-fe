@@ -88,26 +88,32 @@
 
 
 			<div class="app">
-				<div id="sidebar" class="app__sidebar">
-					<div class="controls__search" id="addressSearch">
-					</div>
-					<div id="layers-control" class="controls__layers">
-      					<div class="layers-control"></div>
-      				</div><!-- /.controls__layers -->
-      				<div class="controls__features">
-        				<ul id="features" class="features"></ul>
-      				</div><!-- /.controls__features -->
-      				<div class="action"></div>
-				</div>
+				
+
 				<div class="app__main">
+					<div class="app__sidebar">
+						<div id="sidebar" class="app__sidebar__content js-sidebar">
+						<div class="controls__search" id="addressSearch">
+						</div>
+						<div id="layers-control" class="controls__layers">
+	      					<div class="layers-control"></div>
+	      				</div><!-- /.controls__layers -->
+	      				</div>
+	      				<a class="app__sidebar__toggle js-sidebar__toggle"></a>
+					</div>
 					<div class="fetching">
 						<p class="fetching__message">We're just loading the map for you, hold on tight</p>
 					</div>
 					<div id="map-wrapper"></div>
+				</div>
+				<div class="app__banner">
 					<div class="controls__tools">
 						<ul id="tools" class="nav maptools"></ul>
 						<div id="distance" class="stat-group"></div>
 					</div><!-- /.controls__tools -->
+					<div class="controls__features">
+        				<ul id="features" class="features"></ul>
+      				</div><!-- /.controls__features -->
 				</div>
 				<div id="pro" class="text--right"></div>
 			</div>
